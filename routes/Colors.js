@@ -1,5 +1,5 @@
 const express = require('express');
-const { getColors, EditColors, postColors } = require('../controllers/colors');
+const { getColors, EditColors, postColors } = require('../controllers/Colors');
 const ColorsRouter = express.Router();
 
 ColorsRouter.route('/colors').get(getColors);

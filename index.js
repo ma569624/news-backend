@@ -14,13 +14,13 @@ const JaraIdharroute = require('./routes/Jaraidhar');
 const BlogRouter = require('./routes/Blog');
 const categoriesRouter = require('./routes/Category');
 const HomeDisplayRouter = require('./routes/HomeDisplay');
-// const ColorsRouter = require('./routes/Colors');
 
 // const multer = require('multer');
 const RajiyoRouter = require('./routes/Rajiya');
 const VotPollRouter = require('./routes/votpoll');
 const {RashifalRouter, JyotishRouter} = require('./routes/Rashifal');
 const AdvertRouter = require('./routes/Advert');
+const ColorsRouter = require('./routes/Colors');
 
 // const ServiceRouter = require('./routes/serviceroute');
 const PORT = process.env.PORT || 5000;
@@ -45,7 +45,7 @@ app.use("/api", RashifalRouter);
 app.use("/api", JyotishRouter);
 app.use("/api", AdvertRouter);
 app.use("/api", VotPollRouter);
-// app.use("/api", ColorsRouter);
+app.use("/api", ColorsRouter);
 app.use("/api", HomeDisplayRouter);
 app.use("/api", RajiyoRouter);
 app.use("/api", categoriesRouter);

@@ -10,7 +10,7 @@ const Loginrouter = require('./routes/login');
 const Toplinksrouter = require('./routes/toplinks');
 const Badikhabarrouter = require('./routes/badikhabar');
 const JaraIdharroute = require('./routes/Jaraidhar');
-const ApradhJagatrouter = require('./routes/Apradhjagat');
+// const ApradhJagatrouter = require('./routes/Apradhjagat');
 const BlogRouter = require('./routes/Blog');
 const categoriesRouter = require('./routes/Category');
 const HomeDisplayRouter = require('./routes/HomeDisplay');
@@ -139,7 +139,7 @@ app.use("/api", signuprouter);
 app.use("/api", shubhkamnarouter);
 app.use("/api", Badikhabarrouter);
 app.use("/api", JaraIdharroute);
-app.use("/api", ApradhJagatrouter);
+// app.use("/api", ApradhJagatrouter);
 app.use("/api", Toplinksrouter);
 app.use("/api", Loginrouter);
 

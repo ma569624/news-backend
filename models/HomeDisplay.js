@@ -1,13 +1,17 @@
 const mongoose = require("mongoose")
 
 const HomeDisplaySchema = new mongoose.Schema({
-    CategoryName: {
+    SectionName: {
         type: String,
-        required: true,
+        required: false,
+    },
+    SecondSection: {
+        type: String,
+        required: false,
     },
     StateName: {
         type: String,
-        required: true,
+        required: false,
     },
     isRajiya: {
         type: Boolean,
@@ -15,7 +19,7 @@ const HomeDisplaySchema = new mongoose.Schema({
     },
     FirstLink: {
         type: String,
-        required: true,
+        required: false,
     },
     SecondLink:{
         type: String,
@@ -63,6 +67,10 @@ const RajiyoSchema = new mongoose.Schema({
     StateName: {
         type: String,
         required: true,
+    },
+    SecondSection: {
+        type: String,
+        required: false,
     },
     FirstLink: {
         type: String,

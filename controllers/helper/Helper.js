@@ -3,7 +3,6 @@ const port = process.env.PORT;
 const path = require("path");
 
 const ShubhkamnnaHelper = (req) => {
-
     // const ReporterImage = `http://localhost:5000/image/${req.files.Image1[0].filename}`;
     // const Image = `http://localhost:5000/image/${req.files.Image2[0].filename}`;
     let ReporterImage, Image, Video, Audio;
@@ -87,5 +86,28 @@ const BlogHelper = (req) => {
     return { StateName, Category, Status, ReporterImage, ReporterName, Heading, Matter, DatePlace, Capton, Subheading, Designation, Position, Image, Video, Audio };
 }
 
+const TeamHelper = (req) => {
 
-module.exports = { ShubhkamnnaHelper, BlogHelper };
+    let  EmployeeImage;
+
+    if (req.files.Image1 && req.files.Image1.length > 0) {
+        EmployeeImage = `/image/${req.files.Image1[0].filename}`;
+        console.log(req.files.Image1[0].filename);
+    } else {
+        // Handle the case where req.files.Image1 is not defined or empty
+    }
+
+   
+    
+    const heading = req.body.heading;
+    const EmployeeName = req.body.EmployeeName;
+    const Status = req.body.Status;
+    const EmployeeDesignation = req.body.EmployeeDesignation;
+    const Place = req.body.Place;
+    const EmployeeDetails = req.body.EmployeeDetails;
+    
+
+    return { heading, EmployeeDesignation, EmployeeDetails, Place, Status, EmployeeImage,EmployeeName };
+}
+
+module.exports = { ShubhkamnnaHelper, BlogHelper, TeamHelper };

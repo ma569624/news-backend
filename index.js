@@ -21,6 +21,7 @@ const VotPollRouter = require('./routes/votpoll');
 const {RashifalRouter, JyotishRouter} = require('./routes/Rashifal');
 const AdvertRouter = require('./routes/Advert');
 const ColorsRouter = require('./routes/Colors');
+const TeamRouter = require('./routes/Team');
 
 // const ServiceRouter = require('./routes/serviceroute');
 const PORT = process.env.PORT || 5000;
@@ -41,6 +42,7 @@ app.get('/', (req, res) => {
 
 
 app.use("/api", BlogRouter);
+app.use("/api", TeamRouter);
 app.use("/api", RashifalRouter);
 app.use("/api", JyotishRouter);
 app.use("/api", AdvertRouter);

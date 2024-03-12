@@ -3,7 +3,7 @@ const mongoose = require("mongoose")
 const HomeDisplaySchema = new mongoose.Schema({
     SectionName: {
         type: String,
-        required: false,
+        required: true,
     },
     SecondSection: {
         type: String,
@@ -23,43 +23,43 @@ const HomeDisplaySchema = new mongoose.Schema({
     },
     SecondLink:{
         type: String,
-        required: true,
+        required: false,
     },
     ThirdLink: {
         type: String,
-        required: true,
+        required: false,
     }, 
     ForthLink: {
         type: String,
-        required: true,
+        required: false,
     }, 
     FiveLink: {
         type: String,
-        required: true,
+        required: false,
     },
     New1: {
         type: String,
-        required: true,
+        required: false,
     },
     New2: {
         type: String,
-        required: true,
+        required: false,
     },
     New3: {
         type: String,
-        required: true,
+        required: false,
     },
     New4: {
         type: String,
-        required: true,
+        required: false,
     },
     New5: {
         type: String,
-        required: true,
+        required: false,
     },
     New6: {
         type: String,
-        required: true,
+        required: false,
     },
 })
 const RajiyoSchema = new mongoose.Schema({
@@ -74,47 +74,47 @@ const RajiyoSchema = new mongoose.Schema({
     },
     FirstLink: {
         type: String,
-        required: true,
+        required: false,
     },
     SecondLink:{
         type: String,
-        required: true,
+        required: false,
     },
     ThirdLink: {
         type: String,
-        required: true,
+        required: false,
     }, 
     ForthLink: {
         type: String,
-        required: true,
+        required: false,
     }, 
     FiveLink: {
         type: String,
-        required: true,
+        required: false,
     },
     New1: {
         type: String,
-        required: true,
+        required: false,
     },
     New2: {
         type: String,
-        required: true,
+        required: false,
     },
     New3: {
         type: String,
-        required: true,
+        required: false,
     },
     New4: {
         type: String,
-        required: true,
+        required: false,
     },
     New5: {
         type: String,
-        required: true,
+        required: false,
     },
     New6: {
         type: String,
-        required: true,
+        required: false,
     },
 })
 

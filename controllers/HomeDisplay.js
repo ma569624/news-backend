@@ -1,4 +1,6 @@
-const {HomeDisplay} = require("../models/HomeDisplay");
+const { HomeDisplay } = require("../models/HomeDisplay");
+const Blog = require('../models/Blog');
+
 
 const getHomeDisplay = async (req, res) => {
     const mydata = await HomeDisplay.find(req.query);
@@ -15,17 +17,48 @@ const postHomeDisplay = async (req, res) => {
         console.log(result)
         res.status(200).json(result);
     } catch (error) {
-        res.status(200).json({ message: 'error created successfully',error });
+        res.status(200).json({ message: 'error created successfully', error });
     }
 }
 
 const EditHomeDisplay = async (req, res) => {
+    const categoriesquery = req.body.SectionName;
+    // const categoriesquery = req.query.SectionName;
+    const iscategories = categoriesquery;
     try {
         const data = req.body;
         const itemId = req.params.id;
+        const exitsdata = await HomeDisplay.findById(itemId);
         const updatedItem = await HomeDisplay.findByIdAndUpdate(itemId, data, {
             new: true, // return the modified document rather than the original
         });
+
+        console.log(exitsdata.SectionName)
+        console.log(categoriesquery)
+
+        // Find blogs where Category array contains "अपराध समाचार"
+        const docs = await Blog.find({ Category: { $regex: `${exitsdata.SectionName}` } });
+        console.log('Filtered Data:', docs);
+
+
+        // Update the category name in all matching blogs
+        const result = await Blog.updateMany(
+            { "Category": { $regex: `${exitsdata.SectionName}` } }, // Filter for documents where the Category field matches the old category name
+            { $set: { "Category.$[]": `["${categoriesquery}"]` } }, // Update the value in the Category array
+            { arrayFilters: [{ "element":  `${exitsdata.SectionName}]` }] } // Apply array filters to match elements in the Category array
+        );
+
+        
+        console.log(`${result.nModified} documents updated.`);
+        // const result = await Blog.updateMany(
+        //     { "Category": exitsdata.SectionName },
+        //     { $set: { "Category.$": `["${categoriesquery}"]` } }
+        // );
+
+        // console.log(`${result.nModified} documents updated.`);
+
+        // const change = await Blog.find();
+        // console.log(req.body);
         res.json(updatedItem);
     }
 
@@ -55,4 +88,4 @@ const DeleteHomeDisplay = async (req, res) => {
 }
 
 
-module.exports = {getHomeDisplay, postHomeDisplay, EditHomeDisplay, DeleteHomeDisplay };
+module.exports = { getHomeDisplay, postHomeDisplay, EditHomeDisplay, DeleteHomeDisplay };

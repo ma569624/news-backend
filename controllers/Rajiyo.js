@@ -27,7 +27,7 @@ const EditRajiyo = async (req, res) => {
     try {
         const data = req.body;
         const itemId = req.params.id;
-        const exitsdata = await HomeDisplay.findById(itemId);
+        const exitsdata = await Rajiyo.findById(itemId);
 
         const updatedItem = await Rajiyo.findByIdAndUpdate(itemId, data, {
             new: true, // return the modified document rather than the original

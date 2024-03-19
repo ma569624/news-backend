@@ -109,5 +109,58 @@ const TeamHelper = (req) => {
 
     return { heading, EmployeeDesignation, EmployeeDetails, Place, Status, EmployeeImage,EmployeeName };
 }
+const FounderHelper = (req) => {
 
-module.exports = { ShubhkamnnaHelper, BlogHelper, TeamHelper };
+    let  EmployeeImage;
+
+    if (req.files.Image1 && req.files.Image1.length > 0) {
+        EmployeeImage = `/image/${req.files.Image1[0].filename}`;
+        console.log(req.files.Image1[0].filename);
+    } else {
+        // Handle the case where req.files.Image1 is not defined or empty
+    }
+
+   
+    
+    const heading = req.body.heading;
+    const EmployeeName = req.body.EmployeeName;
+    const Status = req.body.Status;
+    const EmployeeDesignation = req.body.EmployeeDesignation;
+    const EmailAddress = req.body.EmailAddress;
+    const ContactNumber = req.body.ContactNumber;
+    
+
+    return { heading, EmployeeDesignation, ContactNumber, EmailAddress, Status, EmployeeImage,EmployeeName };
+}
+
+const AdvertHelper = (req) => {
+
+    let Image1, Image2, Video;
+
+    if (req.files.Image1 && req.files.Image1.length > 0) {
+        Image1 = `/image/${req.files.Image1[0].filename}`;
+        console.log(req.files.Image1[0].filename);
+    } else {
+        // Handle the case where req.files.Image1 is not defined or empty
+    }
+
+    if (req.files.Image2 && req.files.Image2.length > 0) {
+        Image2 = `/image/${req.files.Image2[0].filename}`;
+    } else {
+        // Handle the case where req.files.Image2 is not defined or empty
+    }
+    if (req.files.Video && req.files.Video.length > 0) {
+        Video = `/image/${req.files.Video[0].filename}`;
+        console.log(req.files.Video[0].filename);
+    } else {
+        // Handle the case where req.files.Image1 is not defined or empty
+    }
+
+    const location = req.body.location;
+    const url = req.body.url;
+    
+
+    return { url, location, Image1, Image2, Video };
+}
+
+module.exports = { ShubhkamnnaHelper, BlogHelper, TeamHelper, FounderHelper, AdvertHelper };

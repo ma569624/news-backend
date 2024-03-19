@@ -1,22 +1,24 @@
-const Advert = require('../models/Advert');
-const { AdvertHelper } = require('./helper/Helper');
 
-const getAdvert = async (req, res) => {
+const Founder = require('../models/Founder');
+const { FounderHelper } = require('./helper/Helper');
+
+
+const getFounder = async (req, res) => {
     const categoriesquery = req.query.Category;
     const iscategories = categoriesquery;
     const queryValue = req.query.Position; // Assuming Position is the correct field to query
 
     try {
         if (queryValue) {
-            const docs = await Advert.find({ Position: { $regex: queryValue, $options: 'i' } });
+            const docs = await Founder.find({ Position: { $regex: queryValue, $options: 'i' } });
             console.log('Filtered Data:', docs);
             return res.status(200).json(docs);
         } else if (iscategories) {
-            const docs = await Advert.find({ Category: { $regex: categoriesquery, $options: 'i' } });
+            const docs = await Founder.find({ Category: { $regex: categoriesquery, $options: 'i' } });
             console.log('Filtered Data:', docs);
             return res.status(200).json(docs);
         } else {
-            const mydata = await Advert.find(req.query);
+            const mydata = await Founder.find(req.query);
             return res.status(200).json(mydata);
         }
     } catch (error) {
@@ -24,12 +26,12 @@ const getAdvert = async (req, res) => {
     }
 };
 
-const postAdvert = async (req, res) => {
+const postFounder = async (req, res) => {
     try {
         console.log(req.body)
-        const items = AdvertHelper(req);
+        const items = FounderHelper(req);
         console.log(items)
-        const data = new Advert(items);
+        const data = new Founder(items);
         const result = await data.save();
         console.log(result)
         res.status(200).json(result);
@@ -39,11 +41,11 @@ const postAdvert = async (req, res) => {
     }
 }
 
-const EditAdvert = async (req, res) => {
+const EditFounder = async (req, res) => {
     try {
-        const data = AdvertHelper(req);
+        const data = FounderHelper(req);
         const itemId = req.params.id;
-        const updatedItem = await Advert.findByIdAndUpdate(itemId, data, {
+        const updatedItem = await Founder.findByIdAndUpdate(itemId, data, {
             new: true, // return the modified document rather than the original
         });
         res.json(updatedItem);
@@ -56,12 +58,12 @@ const EditAdvert = async (req, res) => {
 
 }
 
-const DeleteAdvert = async (req, res) => {
+const DeleteFounder = async (req, res) => {
     const Id = req.params.id;
 
     try {
         // Use deleteOne to delete a document by its ID
-        const result = await Advert.deleteOne({ _id: Id });
+        const result = await Founder.deleteOne({ _id: Id });
         // Check if the product was found and deleted
         if (result.deletedCount === 0) {
             return res.status(404).json({ error: 'Product not found' });
@@ -75,4 +77,4 @@ const DeleteAdvert = async (req, res) => {
 }
 
 
-module.exports = { getAdvert, postAdvert, EditAdvert, DeleteAdvert };
+module.exports = { getFounder, postFounder, EditFounder, DeleteFounder };

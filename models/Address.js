@@ -1,37 +1,30 @@
 const mongoose = require("mongoose")
 
 
-const AdvertSchema = new mongoose.Schema({
-
+const AddressSchema = new mongoose.Schema({
+    heading: {
+        type: String,
+        required: false,
+    },
     Status: {
         type: String,
         enum: ['active', 'inactive', 'pending'], // Define allowed values
         default: 'active',
     },
-    location: {
-        type: [String],
-        required: true,
-    },
-    url: {
+    CompleteAddress: {
         type: String,
         required: false,
     },
-    Image1: {
+    heading2: {
         type: String,
         required: false,
     },
-    Image2: {
+    OtherDetails: {
         type: String,
         required: false,
     },
-    Video: {
-        type: String,
-        required: false,
-    },
-
 })
 
 
 
-
-module.exports = mongoose.model("advert", AdvertSchema);
+module.exports = mongoose.model("addres", AddressSchema);

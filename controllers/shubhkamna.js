@@ -1,6 +1,5 @@
 const { Shubhkamna } = require('../models/Home')
-const uri = process.env.URI;
-const { MongoClient } = require('mongodb');
+
 const { BannerHelper, ShubhkamnnaHelper } = require('./helper/Helper');
 const path = require('path');
 

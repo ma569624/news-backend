@@ -9,58 +9,18 @@ const HomeDisplaySchema = new mongoose.Schema({
         type: String,
         required: false,
     },
-    StateName: {
-        type: String,
-        required: false,
-    },
-    isRajiya: {
+
+    isHeader: {
         type: Boolean,
-        required: false,
+        default: false,
     },
-    FirstLink: {
+    
+    Status: {
         type: String,
-        required: false,
+        enum: ['active', 'inactive', 'pending'], // Define allowed values
+        default: 'active',
     },
-    SecondLink:{
-        type: String,
-        required: false,
-    },
-    ThirdLink: {
-        type: String,
-        required: false,
-    }, 
-    ForthLink: {
-        type: String,
-        required: false,
-    }, 
-    FiveLink: {
-        type: String,
-        required: false,
-    },
-    New1: {
-        type: String,
-        required: false,
-    },
-    New2: {
-        type: String,
-        required: false,
-    },
-    New3: {
-        type: String,
-        required: false,
-    },
-    New4: {
-        type: String,
-        required: false,
-    },
-    New5: {
-        type: String,
-        required: false,
-    },
-    New6: {
-        type: String,
-        required: false,
-    },
+    
 })
 const RajiyoSchema = new mongoose.Schema({
     
@@ -76,46 +36,7 @@ const RajiyoSchema = new mongoose.Schema({
         type: String,
         required: false,
     },
-    SecondLink:{
-        type: String,
-        required: false,
-    },
-    ThirdLink: {
-        type: String,
-        required: false,
-    }, 
-    ForthLink: {
-        type: String,
-        required: false,
-    }, 
-    FiveLink: {
-        type: String,
-        required: false,
-    },
-    New1: {
-        type: String,
-        required: false,
-    },
-    New2: {
-        type: String,
-        required: false,
-    },
-    New3: {
-        type: String,
-        required: false,
-    },
-    New4: {
-        type: String,
-        required: false,
-    },
-    New5: {
-        type: String,
-        required: false,
-    },
-    New6: {
-        type: String,
-        required: false,
-    },
+   
 })
 
 const HomeDisplay = mongoose.model("displayblogs", HomeDisplaySchema);

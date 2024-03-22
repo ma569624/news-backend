@@ -71,8 +71,10 @@ const BlogHelper = (req) => {
     } else {
         // Handle the case where req.files.Image1 is not defined or empty
     }
-    const StateName = req.body.StateName;
-    const Category = req.body.Category;
+
+    // const StateName = req.body.StateName;
+    let modifiedCategoryString = req.body.Category.replace(/[\[\]"']/g, '');
+    const Category = modifiedCategoryString.split(/,(?!\s)/);
     const Status = req.body.Status;
     const ReporterName = req.body.ReporterName;
     const Heading = req.body.Heading;
@@ -81,9 +83,11 @@ const BlogHelper = (req) => {
     const Capton = req.body.Capton;
     const Subheading = req.body.Subheading;
     const Designation = req.body.Designation;
-    const Position = req.body.Position;
 
-    return { StateName, Category, Status, ReporterImage, ReporterName, Heading, Matter, DatePlace, Capton, Subheading, Designation, Position, Image, Video, Audio };
+    // let modifiedPositionString = req.body.Position.replace(/[\[\]"']/g, '');
+    // const Position = modifiedPositionString.split(/,(?!\s)/);
+    // const Position = req.body.Position;
+    return { Category, Status, ReporterImage, ReporterName, Heading, Matter, DatePlace, Capton, Subheading, Designation, Image, Video, Audio };
 }
 
 const TeamHelper = (req) => {

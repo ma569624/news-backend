@@ -2,34 +2,74 @@ const Blog = require('../models/Blog');
 const { BlogHelper } = require('./helper/Helper');
 
 const getBlog = async (req, res) => {
-    const categoriesquery = req.query.Category;
-    const iscategories = categoriesquery;
-    const queryValue = req.query.Position; // Assuming Position is the correct field to query
+    // const categoriesquery = req.query.Category;
+    // const iscategories = categoriesquery;
+    // const queryValue = req.query.Position; // Assuming Position is the correct field to query
 
-    try {
-        if (queryValue) {
-            const docs = await Blog.find({ Position: { $regex: queryValue, $options: 'i' } });
-            console.log('Filtered Data:', docs);
-            return res.status(200).json(docs);
-        } else if (iscategories) {
-            const docs = await Blog.find({ Category: { $regex: categoriesquery, $options: 'i' } });
-            console.log('Filtered Data:', docs);
-            return res.status(200).json(docs);
-        } else {
-            const mydata = await Blog.find(req.query);
-            return res.status(200).json(mydata);
-        }
-    } catch (error) {
-        return res.status(500).json({ message: 'Error occurred', error });
+    console.log(req.query);
+
+   try {
+    const page = Number(req.query.page) || 1;
+    const limit = Number(req.query.limit) || 8;
+    const Category = req.query.Category || '';
+
+    console.log(page);
+    console.log(limit);
+
+    let skip = (page - 1) * limit;
+    let sortQuery
+    
+    if (Category) {
+        sortQuery = { Category: { $regex: Category, $options: 'i' } };
     }
+    
+    const data = await Blog.find(sortQuery).skip(skip).limit(limit).sort({ createdAt: -1 });
+    res.status(200).json({ data, nbHits: data.length });
+
+   } catch (error) {
+    res.status(500).json(error);
+    
+   }
+
+
+    // const data = await Blog.find().skip(skip).limit(limit).sort(sortQuery);
+    // const data = await Blog.find({ Category: { $regex: "TopKhabare", $options: "i" } })
+    // const result = await Blog.updateMany(
+    //     { Position: { $regex: /idharbhi/i } },
+    //     { $set: { "Category.$": "idharbhi" } }
+    //   );
+    // console.warn(result);
+    // const result =  await Blog.updateMany(
+    //     { Heading: "undefined" },
+    //     { $unset: { Heading: "" } }
+    // );
+    // console.warn(result);
+
+
+    // try {
+    //     if (queryValue) {
+    //         const docs = await Blog.find({ Position: { $regex: queryValue, $options: 'i' } });
+    //         console.log('Filtered Data:', docs);
+    //         return res.status(200).json(docs);
+    //     } else if (iscategories) {
+    //         const docs = await Blog.find({ Category: { $regex: categoriesquery, $options: 'i' } });
+    //         console.log('Filtered Data:', docs);
+    //         return res.status(200).json(docs);
+    //     } else {
+    //         const mydata = await Blog.find(req.query);
+    //         return res.status(200).json(mydata);
+    //     }
+    // } catch (error) {
+    //     return res.status(500).json({ message: 'Error occurred', error });
+    // }
 };
 
 const postBlog = async (req, res) => {
     try {
-        console.log(req.body)
+        // console.log(req.body)
         const items = BlogHelper(req);
         console.log(items)
-        const data = new Blog(items);
+        const data = new Blog(items)
         const result = await data.save();
         console.log(result)
         res.status(200).json(result);

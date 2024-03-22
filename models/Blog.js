@@ -2,17 +2,14 @@ const mongoose = require("mongoose")
 
 const BlogSchema = new mongoose.Schema({
     Category: {
-        type: Array,
-        required: false,
-    },
-    Position: {
-        type: [String],
-        required: true,
-    },
-    StateName: {
         type: [String],
         required: false,
     },
+    // Position: {
+    //     type: [String],
+    //     required: false,
+    // },
+   
     ReporterImage: {
         type: String,
         required: false,

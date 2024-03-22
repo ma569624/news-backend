@@ -22,12 +22,16 @@ const postHomeDisplay = async (req, res) => {
 }
 
 const EditHomeDisplay = async (req, res) => {
+    console.log(req.body.SectionName)
     const categoriesquery = req.body.SectionName;
     // const categoriesquery = req.query.SectionName;
     const iscategories = categoriesquery;
     try {
         const data = req.body;
+        console.log(req.body)
+        console.log(req.body)
         const itemId = req.params.id;
+        console.log(itemId)
         const exitsdata = await HomeDisplay.findById(itemId);
         const updatedItem = await HomeDisplay.findByIdAndUpdate(itemId, data, {
             new: true, // return the modified document rather than the original

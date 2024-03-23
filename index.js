@@ -68,20 +68,33 @@ app.use("/api", Loginrouter);
 const fs = require("fs")
 const path = require("path")
 const pathToIndex = path.join(__dirname, "build/index.html")
-app.get("/", (req, res) => {
-  const raw = fs.readFileSync(pathToIndex)
-  const pageTitle = "Homepage - Welcome to my page"
-  const updated = raw.replace("__PAGE_META__", `<title>${pageTitle}</title>`)
-  res.send(updated)
+app.get('/', function(request, response) {
+    console.log('Home page visited!');
+    const filePath = path.resolve(__dirname, './build', 'index.html');
   
-})
-//
-app.use(express.static(path.join(__dirname, "build")))
-app.get("*", (req, res) => {
-    console.log('hit'); // Log a message when the wildcard route is hit
-    res.sendFile(path.join(__dirname, "build/index.html"));
+    // read in the index.html file
+    fs.readFile(filePath, 'utf8', function (err,data) {
+      if (err) {
+        return console.log(err);
+      }
+      
+      // replace the special strings with server generated strings
+      data = data.replace(/\$OG_TITLE/g, 'Home Page');
+      data = data.replace(/\$OG_DESCRIPTION/g, "Home page description");
+      result = data.replace(/\$OG_IMAGE/g, 'https://i.imgur.com/V7irMl8.png');
+      response.send(result);
+    });
   });
-  
+
+app.use(express.static(path.join(__dirname, "build")))
+
+app.use(express.static(path.resolve(__dirname, './build')));
+
+app.get('*', function(request, response) {
+  const filePath = path.resolve(__dirname, './build', 'index.html');
+  response.sendFile(filePath);
+});
+
 
 
 

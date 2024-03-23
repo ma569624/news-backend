@@ -9,12 +9,10 @@ const HomeDisplaySchema = new mongoose.Schema({
         type: String,
         required: false,
     },
-
     isHeader: {
         type: Boolean,
         default: false,
     },
-    
     Status: {
         type: String,
         enum: ['active', 'inactive', 'pending'], // Define allowed values

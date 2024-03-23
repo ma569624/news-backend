@@ -65,6 +65,59 @@ app.use("/api", JaraIdharroute);
 app.use("/api", Toplinksrouter);
 app.use("/api", Loginrouter);
 
+const fs = require("fs")
+const path = require("path")
+const pathToIndex = path.join(__dirname, "build/index.html")
+app.get("/", (req, res) => {
+  const raw = fs.readFileSync(pathToIndex)
+  const pageTitle = "Homepage - Welcome to my page"
+  const updated = raw.replace("__PAGE_META__", `<title>${pageTitle}</title>`)
+  res.send(updated)
+  
+})
+//
+app.use(express.static(path.join(__dirname, "build")))
+app.get("*", (req, res) => {
+    console.log('hit'); // Log a message when the wildcard route is hit
+    res.sendFile(path.join(__dirname, "build/index.html"));
+  });
+  
+
+
+
+// app.get('/meta', (req, res) => {
+//     // Your data for meta tags
+//     const metaData = {
+//       title: "Your Page Title",
+//       description: "Your page description",
+//       ogTitle: "Your Open Graph Title",
+//       ogDescription: "Your Open Graph Description",
+//       ogImage: "URL to your Open Graph Image"
+//     };
+  
+//     // Constructing the HTML with dynamically added meta tags
+//     const html = `
+//       <!DOCTYPE html>
+//       <html lang="en">
+//       <head>
+//         <meta charset="utf-8" />
+//         <title>${metaData.title}</title>
+//         <meta name="description" content="${metaData.description}" />
+//         <meta property="og:title" content="${metaData.ogTitle}" />
+//         <meta property="og:description" content="${metaData.ogDescription}" />
+//         <meta property="og:image" content="${metaData.ogImage}" />
+//       </head>
+//       <body>
+//         <h1>Welcome to Your Website</h1>
+//         <!-- Your HTML content goes here -->
+//       </body>
+//       </html>
+//     `;
+  
+//     res.send(html);
+//     // res.status(200).json(html);
+
+//   });
 
 app.use('/image', express.static('upload/images'));
 

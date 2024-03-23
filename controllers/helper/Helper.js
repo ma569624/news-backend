@@ -73,8 +73,9 @@ const BlogHelper = (req) => {
     }
 
     // const StateName = req.body.StateName;
-    let modifiedCategoryString = req.body.Category.replace(/[\[\]"']/g, '');
-    const Category = modifiedCategoryString.split(/,(?!\s)/);
+    // let modifiedCategoryString = req.body.Category.replace(/[\[\]"']/g, '');
+    // const Category = modifiedCategoryString.split(/,(?!\s)/);
+    const Category = req.body.Category ? req.body.Category.replace(/[\[\]"']/g, '').split(/,(?!\s)/) : [];
     const Status = req.body.Status;
     const ReporterName = req.body.ReporterName;
     const Heading = req.body.Heading;
@@ -84,10 +85,26 @@ const BlogHelper = (req) => {
     const Subheading = req.body.Subheading;
     const Designation = req.body.Designation;
 
-    // let modifiedPositionString = req.body.Position.replace(/[\[\]"']/g, '');
-    // const Position = modifiedPositionString.split(/,(?!\s)/);
-    // const Position = req.body.Position;
-    return { Category, Status, ReporterImage, ReporterName, Heading, Matter, DatePlace, Capton, Subheading, Designation, Image, Video, Audio };
+    const data = {
+        Status,
+        ReporterImage,
+        ReporterName,
+        Heading,
+        Matter,
+        DatePlace,
+        Capton,
+        Subheading,
+        Designation,
+        Image,
+        Video,
+        Audio
+    };
+    if (Category.length > 0) {
+        data.Category = Category;
+    }
+    
+    return data;
+    // return { Category, Status, ReporterImage, ReporterName, Heading, Matter, DatePlace, Capton, Subheading, Designation, Image, Video, Audio };
 }
 
 const TeamHelper = (req) => {

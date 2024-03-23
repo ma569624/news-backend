@@ -12,6 +12,7 @@ const getBlog = async (req, res) => {
         const page = Number(req.query.page) || 1;
         const limit = Number(req.query.limit) || 8;
         const Category = req.query.Category || '';
+        const tajasamachar = req.query.tajasamachar || '';
         const Id = req.query._id || '';
 
         console.log(page);
@@ -23,6 +24,9 @@ const getBlog = async (req, res) => {
 
         if (Category) {
             sortQuery = { Category: { $regex: Category, $options: 'i' } };
+        }
+        if (tajasamachar) {
+            sortQuery = { tajasamachar: { $regex: tajasamachar, $options: 'i' } };
         }
         if (Id) {
             sortQuery = { _id: Id };

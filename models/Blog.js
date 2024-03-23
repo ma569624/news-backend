@@ -5,11 +5,16 @@ const BlogSchema = new mongoose.Schema({
         type: [String],
         required: false,
     },
+    tajasamachar:{
+        type: String,
+        required: false,
+    },
+
     // Position: {
     //     type: [String],
     //     required: false,
     // },
-   
+
     ReporterImage: {
         type: String,
         required: false,
@@ -30,6 +35,7 @@ const BlogSchema = new mongoose.Schema({
         type: String,
         required: false,
     },
+    
     Status: {
         type: String,
         enum: ['active', 'inactive', 'pending'], // Define allowed values

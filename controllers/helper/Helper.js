@@ -84,8 +84,10 @@ const BlogHelper = (req) => {
     const Capton = req.body.Capton;
     const Subheading = req.body.Subheading;
     const Designation = req.body.Designation;
+    const tajasamachar  = req.body.tajasamachar;
 
     const data = {
+        tajasamachar,
         Status,
         ReporterImage,
         ReporterName,

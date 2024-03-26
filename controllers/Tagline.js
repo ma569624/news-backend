@@ -1,19 +1,18 @@
-const JaraIdhar = require('../models/JaraIdhar');
-const { ShubhkamnnaHelper } = require('./helper/Helper');
+const Tagline = require('../models/Tagline');
 const path = require('path');
 
-const getJaraIdhar = async (req, res) => {
-    const mydata = await JaraIdhar.find(req.query);
+const getTagline = async (req, res) => {
+    const mydata = await Tagline.find(req.query);
     // console.log(mydata)
     res.status(200).json(mydata);
 };
 
-const postJaraIdhar = async (req, res) => {
+const postTagline = async (req, res) => {
     try {
         // console.log(req.body)
         // const items = BlogHelper(req);
         // console.log(items)
-        const data = new JaraIdhar(req.body);
+        const data = new Tagline(req.body);
         const result = await data.save();
         console.log(result)
         res.status(200).json(result);
@@ -23,11 +22,11 @@ const postJaraIdhar = async (req, res) => {
     }
 }
 
-const EditJaraIdhar = async (req, res) => {
+const EditTagline = async (req, res) => {
     try {
         const data = req.body;
         const itemId = req.params.id;
-        const updatedItem = await JaraIdhar.findByIdAndUpdate(itemId, data, {
+        const updatedItem = await Tagline.findByIdAndUpdate(itemId, data, {
             new: true, // return the modified document rather than the original
         });
         res.status(200).json(updatedItem);
@@ -40,12 +39,12 @@ const EditJaraIdhar = async (req, res) => {
 
 }
 
-const DeleteJaraIdhar = async (req, res) => {
+const DeleteTagline = async (req, res) => {
     const Id = req.params.id;
 
     try {
         // Use deleteOne to delete a document by its ID
-        const result = await JaraIdhar.deleteOne({ _id: Id });
+        const result = await Tagline.deleteOne({ _id: Id });
         // Check if the product was found and deleted
         if (result.deletedCount === 0) {
             return res.status(404).json({ error: 'Product not found' });
@@ -60,4 +59,4 @@ const DeleteJaraIdhar = async (req, res) => {
 
 
 
-module.exports = {getJaraIdhar, postJaraIdhar, EditJaraIdhar, DeleteJaraIdhar };
+module.exports = {getTagline, postTagline, EditTagline, DeleteTagline };

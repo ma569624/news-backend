@@ -14,6 +14,10 @@ const toplinksSchema = new mongoose.Schema({
         type: String,
         require: true
     },
+    background: {
+        type: String,
+        require: true
+    },
     createdate: {
         type: Date,
         default: new Date()

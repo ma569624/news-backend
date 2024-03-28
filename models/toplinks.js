@@ -8,15 +8,19 @@ const toplinksSchema = new mongoose.Schema({
     link: {
         type: String,
         unique: true,
-        require: true
+        require: false
     },
     Position: {
         type: String,
-        require: true
+        require: false
     },
     background: {
         type: String,
-        require: true
+        require: false
+    },
+    Image:{
+        type: String,
+        require: false
     },
     createdate: {
         type: Date,

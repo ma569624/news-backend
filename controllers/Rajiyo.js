@@ -1,5 +1,6 @@
 const { Rajiyo } = require("../models/HomeDisplay");
 const Blog = require('../models/Blog');
+const { RajiyaHelper } = require("./helper/Helper");
 
 const getRajiyo = async (req, res) => {
     const mydata = await Rajiyo.find(req.query);
@@ -10,6 +11,7 @@ const getRajiyo = async (req, res) => {
 const postRajiyo = async (req, res) => {
     try {
         console.log(req.body)
+        
         const items = req.body;
         const data = new Rajiyo(items);
         const result = await data.save();
@@ -25,31 +27,38 @@ const EditRajiyo = async (req, res) => {
     // const categoriesquery = req.query.SectionName;
     const iscategories = categoriesquery;
     try {
-        const data = req.body;
+        // const data = RajiyakkHelper(req);
+        // console.log(req)
+        const data =  RajiyaHelper(req);
+        console.log(data)
+        
         const itemId = req.params.id;
         const exitsdata = await Rajiyo.findById(itemId);
+
+        
 
         const updatedItem = await Rajiyo.findByIdAndUpdate(itemId, data, {
             new: true, // return the modified document rather than the original
         });
 
-        console.log(exitsdata.SectionName)
-        console.log(categoriesquery)
+        // console.log(exitsdata.SectionName)
+        // console.log(categoriesquery)
 
         // Find blogs where Category array contains "अपराध समाचार"
-        const docs = await Blog.find({ Category: { $regex: `${exitsdata.SectionName}` } });
+        const docs = await Blog.find({ Category: { $regex: `${exitsdata.StateName}` } });
         console.log('Filtered Data:', docs);
 
         // Update the category name in all matching blogs
         const result = await Blog.updateMany(
-            { "Category": { $regex: `${exitsdata.SectionName}` } }, // Filter for documents where the Category field matches the old category name
+            { "Category": { $regex: `${exitsdata.StateName}` } }, // Filter for documents where the Category field matches the old category name
             { $set: { "Category.$[]": `["${categoriesquery}"]` } }, // Update the value in the Category array
-            { arrayFilters: [{ "element": `${exitsdata.SectionName}]` }] } // Apply array filters to match elements in the Category array
+            { arrayFilters: [{ "element": `${exitsdata.StateName}]` }] } // Apply array filters to match elements in the Category array
         );
 
         console.log(`${result.nModified} documents updated.`);
         res.json(updatedItem);
     }
+    
 
     catch (error) {
         console.error(error);

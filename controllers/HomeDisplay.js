@@ -1,5 +1,6 @@
 const { HomeDisplay } = require("../models/HomeDisplay");
 const Blog = require('../models/Blog');
+const { blockkHelper } = require("./helper/Helper");
 
 
 const getHomeDisplay = async (req, res) => {
@@ -27,8 +28,9 @@ const EditHomeDisplay = async (req, res) => {
     // const categoriesquery = req.query.SectionName;
     const iscategories = categoriesquery;
     try {
-        const data = req.body;
-        console.log(req.body)
+        
+        const data = blockkHelper(req);
+        console.log(data)
         console.log(req.body)
         const itemId = req.params.id;
         console.log(itemId)

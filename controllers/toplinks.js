@@ -1,4 +1,5 @@
 const toplinks = require('../models/toplinks');
+const { ToplinkHelper } = require('./helper/Helper');
 
 const gettoplinks = async (req, res) => {
     const mydata = await toplinks.find(req.query);
@@ -21,11 +22,15 @@ const posttoplinks = async (req, res) => {
 
 const Edittoplinks = async (req, res) => {
     try {
-        const data = req.body;
+        const topdata = ToplinkHelper(req);
+        
+        console.log(topdata)
+        // const data = req.body;
         const itemId = req.params.id;
-        const updatedItem = await toplinks.findByIdAndUpdate(itemId, data, {
+        const updatedItem = await toplinks.findByIdAndUpdate(itemId, topdata, {
             new: true, // return the modified document rather than the original
         });
+        console.log(updatedItem)
         res.json(updatedItem);
     }
 

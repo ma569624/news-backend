@@ -9,6 +9,22 @@ const HomeDisplaySchema = new mongoose.Schema({
         type: String,
         required: false,
     },
+    Image1: {
+        type: String,
+        required: false,
+    },
+    Image2: {
+        type: String,
+        required: false,
+    },
+    background1:{
+        type: String,
+        required: false,
+    },
+    background2:{
+        type: String,
+        required: false,
+    },
     isHeader: {
         type: Boolean,
         default: false,
@@ -27,6 +43,22 @@ const RajiyoSchema = new mongoose.Schema({
         required: true,
     },
     SecondSection: {
+        type: String,
+        required: false,
+    },
+    Image1: {
+        type: String,
+        required: false,
+    },
+    Image2: {
+        type: String,
+        required: false,
+    },
+    background1:{
+        type: String,
+        required: false,
+    },
+    background2:{
         type: String,
         required: false,
     },

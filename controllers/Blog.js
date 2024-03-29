@@ -56,55 +56,15 @@ const postBlog = async (req, res) => {
 }
 
 const EditBlog = async (req, res) => {
-    console.log(req.params)
-    console.log(req.query)
-    // console.log(req.query)
     try {
-        const data = BlogHelper(req);
-        console.log(data)
-        let updatedItem;
+        const data = BlogHelper(req)
         console.log(data)
         const itemId = req.params.id;
-        const Category = req.query.category;
-        console.log(`${itemId} and ${Category}`)
-        const exitdata = await Blog.findById(itemId)
-        
-        console.log(exitdata.Category.length);
-        if (exitdata.Category.length > 1) {
-            let newData = JSON.parse(JSON.stringify(exitdata));
-            newData.Category = [Category];
-            delete newData._id;
-            // console.log(newData);
-            // console.log(`exits data: ${exitdata}`);
-            console.log('make duplicate')
-            const newBlog = new Blog(newData);
-            const savedNewBlog = await newBlog.save();
-            console.log('New blog item created:', savedNewBlog);
-            console.log(savedNewBlog.id)
-
-            let RemoveCategorie = await Blog.findOneAndUpdate(
-                { _id: itemId }, // Filter for the document to update
-                { $pull: { Category: Category } }, // Remove 'idharbhi' from Category array
-                { new: true } // Return the updated document
-            );
-            console.log(data)
-            updatedItem = await Blog.findByIdAndUpdate(savedNewBlog.id, data, {
-                new: true, // return the modified document rather than the original
-            });
-    
-            console.log(updatedItem)
-        }
-
-        else{
-            updatedItem = await Blog.findByIdAndUpdate(itemId, data, {
-                new: true, // return the modified document rather than the original
-            });
-    
-            console.log(updatedItem)
-        }
-
-
-        res.json(updatedItem);
+        updatedItem = await Blog.findByIdAndUpdate(itemId, data, {
+            new: true, // return the modified document rather than the original
+        });
+        // console.log(updatedItem)
+        res.status(200).json(updatedItem);
     }
 
     catch (error) {
@@ -120,19 +80,6 @@ const DeleteBlog = async (req, res) => {
     console.log(splitarray)
 
     try {
-        // let ddata = await Blog.find({ _id: Id })
-        // let data = await Blog.findOneAndUpdate(
-        //     { _id: Id }, // Filter for the document to update
-        //     { $pull: { Category: Category } }, // Remove 'idharbhi' from Category array
-        //     { new: true } // Return the updated document
-        // );
-        // if (!data.Category || data.Category.length === 0) {
-        //     // If Category array is empty, delete the blog document
-        //    const result = await Blog.findByIdAndDelete(Id);
-        //    console.log(result);
-        // }
-        // console.log(req.params.id)
-        // Use deleteOne to delete a document by its ID
         const result = await Blog.deleteOne({ _id: Id });
         // Check if the product was found and deleted
         if (result.deletedCount === 0) {

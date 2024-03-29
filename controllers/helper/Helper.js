@@ -72,9 +72,6 @@ const BlogHelper = (req) => {
         // Handle the case where req.files.Image1 is not defined or empty
     }
 
-    // const StateName = req.body.StateName;
-    // let modifiedCategoryString = req.body.Category.replace(/[\[\]"']/g, '');
-    // const Category = modifiedCategoryString.split(/,(?!\s)/);
     const Category = req.body.Category ? req.body.Category.replace(/[\[\]"']/g, '').split(/,(?!\s)/) : [];
     const Status = req.body.Status;
     const ReporterName = req.body.ReporterName;

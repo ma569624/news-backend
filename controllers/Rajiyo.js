@@ -70,13 +70,10 @@ const DeleteRajiyo = async (req, res) => {
     const Id = req.params.id;
 
     try {
-        // Use deleteOne to delete a document by its ID
         const result = await Rajiyo.deleteOne({ _id: Id });
-        // Check if the product was found and deleted
         if (result.deletedCount === 0) {
             return res.status(404).json({ error: 'Product not found' });
         }
-        // Respond with a success message
         res.json({ message: 'Product deleted successfully' });
     } catch (error) {
         console.error('Error deleting product:', error);

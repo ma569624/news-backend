@@ -121,24 +121,23 @@ const DeleteBlog = async (req, res) => {
 
     try {
         // let ddata = await Blog.find({ _id: Id })
-        let data = await Blog.findOneAndUpdate(
-            { _id: Id }, // Filter for the document to update
-            { $pull: { Category: Category } }, // Remove 'idharbhi' from Category array
-            { new: true } // Return the updated document
-        );
-        console.log(data)
-        if (!data.Category || data.Category.length === 0) {
-            // If Category array is empty, delete the blog document
-           const result = await Blog.findByIdAndDelete(Id);
-           console.log(result);
-        }
+        // let data = await Blog.findOneAndUpdate(
+        //     { _id: Id }, // Filter for the document to update
+        //     { $pull: { Category: Category } }, // Remove 'idharbhi' from Category array
+        //     { new: true } // Return the updated document
+        // );
+        // if (!data.Category || data.Category.length === 0) {
+        //     // If Category array is empty, delete the blog document
+        //    const result = await Blog.findByIdAndDelete(Id);
+        //    console.log(result);
+        // }
         // console.log(req.params.id)
         // Use deleteOne to delete a document by its ID
-        // const result = await Blog.deleteOne({ _id: Id });
+        const result = await Blog.deleteOne({ _id: Id });
         // Check if the product was found and deleted
-        // if (result.deletedCount === 0) {
-        //     return res.status(404).json({ error: 'Product not found' });
-        // }
+        if (result.deletedCount === 0) {
+            return res.status(404).json({ error: 'Product not found' });
+        }
         // Respond with a success message
         res.json({ message: 'Product deleted successfully' });
     } catch (error) {

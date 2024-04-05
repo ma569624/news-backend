@@ -3,7 +3,7 @@ const Colors = require("../models/Colors");
 
 const getColors = async (req, res) => {
     const mydata = await Colors.find(req.query);
-    console.log(mydata)
+    // console.log(mydata)
     res.status(200).json(mydata);
 };
 

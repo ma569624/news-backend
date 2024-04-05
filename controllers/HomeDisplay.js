@@ -25,46 +25,29 @@ const postHomeDisplay = async (req, res) => {
 const EditHomeDisplay = async (req, res) => {
     console.log(req.body.SectionName)
     const categoriesquery = req.body.SectionName;
-    // const categoriesquery = req.query.SectionName;
-    const iscategories = categoriesquery;
     try {
         
         const data = blockkHelper(req);
         console.log(data)
-        console.log(req.body)
         const itemId = req.params.id;
-        console.log(itemId)
         const exitsdata = await HomeDisplay.findById(itemId);
         const updatedItem = await HomeDisplay.findByIdAndUpdate(itemId, data, {
             new: true, // return the modified document rather than the original
         });
 
-        console.log(exitsdata.SectionName)
-        console.log(categoriesquery)
+        if (categoriesquery) {
+            console.log('change categorie')
+            const docs = await Blog.find({ Category: { $regex: `${exitsdata.SectionName}` } });
 
-        // Find blogs where Category array contains "अपराध समाचार"
-        const docs = await Blog.find({ Category: { $regex: `${exitsdata.SectionName}` } });
-        console.log('Filtered Data:', docs);
+            const result = await Blog.updateMany(
+                { "Category": { $regex: `${exitsdata.SectionName}` } },
+                { $set: { "Category.$[]": `${categoriesquery}` } }, 
+                { arrayFilters: [{ "element": `${exitsdata.SectionName}]` }] } 
+            );
 
+            console.log(`${result.nModified} documents updated.`);
+        }
 
-        // Update the category name in all matching blogs
-        const result = await Blog.updateMany(
-            { "Category": { $regex: `${exitsdata.SectionName}` } }, // Filter for documents where the Category field matches the old category name
-            { $set: { "Category.$[]": `["${categoriesquery}"]` } }, // Update the value in the Category array
-            { arrayFilters: [{ "element":  `${exitsdata.SectionName}]` }] } // Apply array filters to match elements in the Category array
-        );
-
-        
-        console.log(`${result.nModified} documents updated.`);
-        // const result = await Blog.updateMany(
-        //     { "Category": exitsdata.SectionName },
-        //     { $set: { "Category.$": `["${categoriesquery}"]` } }
-        // );
-
-        // console.log(`${result.nModified} documents updated.`);
-
-        // const change = await Blog.find();
-        // console.log(req.body);
         res.json(updatedItem);
     }
 
@@ -93,5 +76,48 @@ const DeleteHomeDisplay = async (req, res) => {
     }
 }
 
+const MultiEditHomeDisplay = async (req, res) => {
+    const { ids, status } = req.body;
+    console.log(req.body)
+    try {
+        // Update the status of multiple items using updateMany
+        const result = await HomeDisplay.updateMany(
+            { _id: { $in: ids } }, // Match items with IDs in the provided array
+            { $set: { Status: status } } // Set the new status
+        );
 
-module.exports = { getHomeDisplay, postHomeDisplay, EditHomeDisplay, DeleteHomeDisplay };
+        if (result.nModified === 0) {
+            return res.status(404).json({ error: 'No products found with the provided IDs' });
+        }
+
+        res.status(200).json({ message: 'Status updated successfully' });
+    } catch (error) {
+        console.error('Error updating status:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+}
+
+const MultiDeleteHomeDisplay = async (req, res) => {
+    const { ids } = req.body;
+    console.log(ids)
+    try {
+        // Use a loop to iterate through each ID and delete the corresponding item
+        for (const id of ids) {
+            // Perform deletion operation for each ID
+            const result = await HomeDisplay.findByIdAndDelete(id); // Assuming Rajiyo is your Mongoose model
+            if (result.deletedCount === 0) {
+                // If the item with the specified ID is not found, return a 404 error
+                return res.status(404).json({ error: `Product with ID ${id} not found` });
+            }
+        }
+
+        // If all items are deleted successfully, send a success response
+        res.status(200).json({ message: 'Products deleted successfully' });
+    } catch (error) {
+        // If an error occurs during deletion, handle it and send an error response
+        console.error('Error deleting products:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+}
+
+module.exports = { getHomeDisplay, postHomeDisplay, EditHomeDisplay, DeleteHomeDisplay, MultiEditHomeDisplay, MultiDeleteHomeDisplay };

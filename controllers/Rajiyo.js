@@ -11,7 +11,7 @@ const getRajiyo = async (req, res) => {
 const postRajiyo = async (req, res) => {
     try {
         console.log(req.body)
-        
+
         const items = req.body;
         const data = new Rajiyo(items);
         const result = await data.save();
@@ -23,42 +23,36 @@ const postRajiyo = async (req, res) => {
 }
 
 const EditRajiyo = async (req, res) => {
-    const categoriesquery = req.body.SectionName;
-    // const categoriesquery = req.query.SectionName;
-    const iscategories = categoriesquery;
+    const categoriesquery = req.body.StateName;
     try {
-        // const data = RajiyakkHelper(req);
-        // console.log(req)
-        const data =  RajiyaHelper(req);
-        console.log(data)
         
+        const data = RajiyaHelper(req);
+        console.log(data)
+
         const itemId = req.params.id;
         const exitsdata = await Rajiyo.findById(itemId);
 
-        
+
 
         const updatedItem = await Rajiyo.findByIdAndUpdate(itemId, data, {
             new: true, // return the modified document rather than the original
         });
 
-        // console.log(exitsdata.SectionName)
-        // console.log(categoriesquery)
+        if (categoriesquery) {
+            console.log('change categorie')
+            const docs = await Blog.find({ Category: { $regex: `${exitsdata.StateName}` } });
 
-        // Find blogs where Category array contains "अपराध समाचार"
-        const docs = await Blog.find({ Category: { $regex: `${exitsdata.StateName}` } });
-        console.log('Filtered Data:', docs);
+            const result = await Blog.updateMany(
+                { "Category": { $regex: `${exitsdata.StateName}` } },
+                { $set: { "Category.$[]": `${categoriesquery}` } }, 
+                { arrayFilters: [{ "element": `${exitsdata.StateName}]` }] } 
+            );
 
-        // Update the category name in all matching blogs
-        const result = await Blog.updateMany(
-            { "Category": { $regex: `${exitsdata.StateName}` } }, // Filter for documents where the Category field matches the old category name
-            { $set: { "Category.$[]": `["${categoriesquery}"]` } }, // Update the value in the Category array
-            { arrayFilters: [{ "element": `${exitsdata.StateName}]` }] } // Apply array filters to match elements in the Category array
-        );
+            console.log(`${result.nModified} documents updated.`);
+        }
 
-        console.log(`${result.nModified} documents updated.`);
         res.json(updatedItem);
     }
-    
 
     catch (error) {
         console.error(error);
@@ -68,7 +62,7 @@ const EditRajiyo = async (req, res) => {
 
 const DeleteRajiyo = async (req, res) => {
     const Id = req.params.id;
-
+    
     try {
         const result = await Rajiyo.deleteOne({ _id: Id });
         if (result.deletedCount === 0) {
@@ -81,5 +75,49 @@ const DeleteRajiyo = async (req, res) => {
     }
 }
 
+const MultiEditRajiyo = async (req, res) => {
+    const { ids, status } = req.body;
+    console.log(req.body)
+    try {
+        // Update the status of multiple items using updateMany
+        const result = await Rajiyo.updateMany(
+            { _id: { $in: ids } }, // Match items with IDs in the provided array
+            { $set: { Status: status } } // Set the new status
+        );
 
-module.exports = { getRajiyo, postRajiyo, EditRajiyo, DeleteRajiyo };
+        if (result.nModified === 0) {
+            return res.status(404).json({ error: 'No products found with the provided IDs' });
+        }
+
+        res.status(200).json({ message: 'Status updated successfully' });
+    } catch (error) {
+        console.error('Error updating status:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+}
+
+const MultiDeleteRajiyo = async (req, res) => {
+    const { ids } = req.body;
+    console.log(ids)
+    try {
+        // Use a loop to iterate through each ID and delete the corresponding item
+        for (const id of ids) {
+            // Perform deletion operation for each ID
+            const result = await Rajiyo.findByIdAndDelete(id); // Assuming Rajiyo is your Mongoose model
+            if (result.deletedCount === 0) {
+                // If the item with the specified ID is not found, return a 404 error
+                return res.status(404).json({ error: `Product with ID ${id} not found` });
+            }
+        }
+
+        // If all items are deleted successfully, send a success response
+        res.status(200).json({ message: 'Products deleted successfully' });
+    } catch (error) {
+        // If an error occurs during deletion, handle it and send an error response
+        console.error('Error deleting products:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+}
+
+
+module.exports = { getRajiyo, postRajiyo, EditRajiyo, DeleteRajiyo, MultiDeleteRajiyo,MultiEditRajiyo };

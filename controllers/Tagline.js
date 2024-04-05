@@ -1,5 +1,4 @@
 const Tagline = require('../models/Tagline');
-const path = require('path');
 
 const getTagline = async (req, res) => {
     const mydata = await Tagline.find(req.query);
@@ -25,6 +24,7 @@ const postTagline = async (req, res) => {
 const EditTagline = async (req, res) => {
     try {
         const data = req.body;
+        console.log(data)
         const itemId = req.params.id;
         const updatedItem = await Tagline.findByIdAndUpdate(itemId, data, {
             new: true, // return the modified document rather than the original

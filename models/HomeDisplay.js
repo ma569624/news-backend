@@ -66,6 +66,11 @@ const RajiyoSchema = new mongoose.Schema({
         type: String,
         required: false,
     },
+    Status: {
+        type: String,
+        enum: ['active', 'inactive'], // Define allowed values
+        default: 'active',
+    },
    
 })
 

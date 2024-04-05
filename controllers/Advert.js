@@ -42,6 +42,7 @@ const postAdvert = async (req, res) => {
 const EditAdvert = async (req, res) => {
     try {
         const data = AdvertHelper(req);
+        console.log(data)
         const itemId = req.params.id;
         const updatedItem = await Advert.findByIdAndUpdate(itemId, data, {
             new: true, // return the modified document rather than the original

@@ -21,7 +21,6 @@ const getBlog = async (req, res) => {
 
         let skip = (page - 1) * limit;
         let sortQuery
-        let active
         if (Category) {
             if (Status) {
                 sortQuery = { Status: Status, Category: { $regex: Category, $options: 'i' } };
@@ -39,7 +38,8 @@ const getBlog = async (req, res) => {
         }
 
 
-        const data = await Blog.find(sortQuery).skip(skip).limit(limit).sort({ createdAt: 1 });
+        // const data = await Blog.find(sortQuery).skip(skip).limit(limit);
+        const data = await Blog.find(sortQuery).sort({ CreationDate: -1 }).skip(skip).limit(limit);
         res.status(200).json({ data, nbHits: data.length });
 
     } catch (error) {

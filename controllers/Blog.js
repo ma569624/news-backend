@@ -101,7 +101,7 @@ const getAllBlog = async (req, res) => {
         result.push(resultItem);
       }
     }
-
+    
     res.status(200).json({ data: result, nbHits: result.length });
   } catch (error) {
     res.status(500).json(error);

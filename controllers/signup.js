@@ -4,7 +4,7 @@ const SignupSchema = require('../models/signup')
 
 const postSign = async (req, res) => {
    
-
+    console.log(req.body)
     try {
         const data = new SignupSchema(req.body);
         const result = await data.save();

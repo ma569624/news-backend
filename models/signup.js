@@ -3,21 +3,45 @@ const mongoose = require('mongoose');
 const SignupSchema = new mongoose.Schema({
     name: {
         type: String,
-        require: true
+        require: false
     },
-    // username: {
-    //     type: String,
-    //     require: true
-
-    // },
     email: {
+        type: String,   
+        // unique: true,
+        require: false
+    },
+    number: {
         type: String,
-        unique: true,
+        require: false
+    },
+    access_delete:{
+        type: Boolean,
+        require: false
+    },
+    User_name: {
+        type: String,
+        // unique: true,
         require: true
     },
     password: {
         type: String,
         require: true
+    },
+    user_type: {
+        type: String,
+        require: false
+    },
+    user_image: {
+        type: String,
+        require: false
+    },
+    user_status: {
+        type: String,
+        require: false
+    },
+    user_block: {
+        type: Boolean,
+        require: false
     },
     Signupdate: {
         type: Date,

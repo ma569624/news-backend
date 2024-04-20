@@ -1,5 +1,3 @@
-// const loginSchema = require("../../models/login/login");
-// const SignupSchema = require('../../models/signup/Signup')
 
 const loginSchema = require('../models/login')
 const SignupSchema = require('../models/signup')
@@ -10,10 +8,11 @@ const postlogin = async (req, res) => {
    const user = await SignupSchema.find(req.body)
    console.log(user)
    
-   const { email, password } = req.body;
+   const { User_name, password } = req.body;
+   
    try {
 
-      const user = await SignupSchema.findOne({ email });
+      const user = await SignupSchema.findOne({ User_name });
       console.log(user.password)
       if (!user) {
          console.log('User not found')
@@ -34,11 +33,11 @@ const postlogin = async (req, res) => {
       return res.status(200).json({ message: `Succesfully` });
 
    } catch (error) {
-      if (error.code === 11000 && error.keyPattern && error.keyPattern.email) {
+      if (error.code === 11000 && error.keyPattern && error.keyPattern.User_name) {
          // Handle duplicate key error for the email field
-         console.error('Duplicate email value:', error.keyValue.email);
+         console.error('Duplicate email value:', error.keyValue.User_name);
 
-         const data = await loginSchema.updateOne({ email: user.email }, {
+         const data = await loginSchema.updateOne({ User_name: user.User_name }, {
             $set: { logindate: new Date() }
          })
 

@@ -71,6 +71,14 @@ const RajiyoSchema = new mongoose.Schema({
         enum: ['active', 'inactive'], // Define allowed values
         default: 'active',
     },
+    order: {
+        type: Number,
+        require: false,
+    },
+    CreationDate: {
+        type: Date,
+        default: new Date()
+    }
    
 })
 

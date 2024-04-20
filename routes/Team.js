@@ -4,6 +4,7 @@ const TeamRouter = express.Router();
 
 const upload = require("../middleware/uploader");
 
+
 TeamRouter.route('/team').get(getTeam);
 TeamRouter.route('/team').post(upload, postTeam);
 TeamRouter.route('/team/:id').put(upload, EditTeam);

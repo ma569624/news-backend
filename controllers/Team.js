@@ -4,26 +4,8 @@ const { TeamHelper } = require('./helper/Helper');
 
 
 const getTeam = async (req, res) => {
-    const categoriesquery = req.query.Category;
-    const iscategories = categoriesquery;
-    const queryValue = req.query.Position; // Assuming Position is the correct field to query
-
-    try {
-        if (queryValue) {
-            const docs = await Team.find({ Position: { $regex: queryValue, $options: 'i' } });
-            console.log('Filtered Data:', docs);
-            return res.status(200).json(docs);
-        } else if (iscategories) {
-            const docs = await Team.find({ Category: { $regex: categoriesquery, $options: 'i' } });
-            console.log('Filtered Data:', docs);
-            return res.status(200).json(docs);
-        } else {
-            const mydata = await Team.find(req.query);
-            return res.status(200).json(mydata);
-        }
-    } catch (error) {
-        return res.status(500).json({ message: 'Error occurred', error });
-    }
+   const result = await Team.find({});
+   res.status(200).json(result);
 };
 
 const postTeam = async (req, res) => {

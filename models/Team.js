@@ -25,12 +25,16 @@ const TeamSchema = new mongoose.Schema({
         required: false,
     },
     Place: {
-        type: String,
+        type: String, 
         required: false,
     },
     EmployeeDetails: {
         type: String,
         required: false,
+    },
+    CreationDate: {
+        type: Date,
+        default: new Date()
     }
 
 })

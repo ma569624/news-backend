@@ -38,10 +38,9 @@ const getBlog = async (req, res) => {
 
     // const data = await Blog.find(sortQuery).skip(skip).limit(limit);
     const data = await Blog.find(sortQuery)
-      .sort({ CreationDate: 1 })
+      .sort({ CreationDate: -1 })
       .skip(skip)
       .limit(limit);
-      data.reverse();
     res.status(200).json({ data, nbHits: data.length });
   } catch (error) {
     res.status(500).json(error);

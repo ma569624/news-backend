@@ -66,10 +66,10 @@ const getAllBlog = async (req, res) => {
         const data = await Blog.find({
           Category: { $regex: item.StateName, $options: "i" },
         })
+        .sort({ CreationDate: -1 })
           .limit(limit)
-          .skip(skip)
-          .sort({ CreationDate: 1 });
-        data.reverse();
+          .skip(skip);
+        // data.reverse();
         //   console.log(data);
         // const resultItem = {};
         // resultItem[item] = data;
@@ -86,10 +86,10 @@ const getAllBlog = async (req, res) => {
         const data = await Blog.find({
           Category: { $regex: item.SectionName, $options: "i" },
         })
+        .sort({ CreationDate: -1 })
           .limit(limit)
-          .skip(skip)
-          .sort({ CreationDate: 1 });
-        data.reverse();
+          .skip(skip);
+        // data.reverse();
         //   console.log(data);
         // const resultItem = {};
         // resultItem[item] = data;

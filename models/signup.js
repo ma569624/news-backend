@@ -46,6 +46,10 @@ const SignupSchema = new mongoose.Schema({
     Signupdate: {
         type: Date,
         default: new Date()
+    },
+    type: {
+        type: String,
+        require: false,
     }
 })
 

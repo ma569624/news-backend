@@ -4,8 +4,10 @@ const { blockkHelper } = require("./helper/Helper");
 
 
 const getHomeDisplay = async (req, res) => {
-    const mydata = await HomeDisplay.find(req.query);
+    const query = req.query.SectionName
+    const mydata = await HomeDisplay.find({SectionName: query});
     // console.log(mydata)
+    console.warn(req.query.SectionName)
     res.status(200).json(mydata);
 };
 

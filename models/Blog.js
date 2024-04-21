@@ -65,19 +65,18 @@ const BlogSchema = new mongoose.Schema({
         type: String,
         required: false,
     },
+    order: {
+        type: Number,
+        required: false,
+        unique: true
+    },
     CreationDate: {
         type: Date,
         default: new Date()
     }
 })
 
-// Middleware to parse Position array as JSON before saving
-BlogSchema.pre('save', function(next) {
-    if (this.Position && Array.isArray(this.Position)) {
-        this.Position = this.Position.map(position => JSON.parse(position));
-    }
-    next();
-});
+
 
 
 module.exports = mongoose.model("blog", BlogSchema);

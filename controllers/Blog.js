@@ -3,7 +3,7 @@ const { BlogHelper } = require("./helper/Helper");
 const { HomeDisplay, Rajiyo } = require("../models/HomeDisplay");
 
 const getBlog = async (req, res) => {
-  console.log(req.query);
+  console.log("test");
 
   try {
     const page = Number(req.query.page) || 1;
@@ -12,10 +12,6 @@ const getBlog = async (req, res) => {
     const tajasamachar = req.query.tajasamachar || "";
     const Id = req.query._id || "";
     const Status = req.query.Status || "";
-
-    // console.log(page);
-    // console.log(limit);
-    // console.log(Id);
 
     let skip = (page - 1) * limit;
     let sortQuery;
@@ -36,12 +32,25 @@ const getBlog = async (req, res) => {
       sortQuery = { _id: Id };
     }
 
+    // const insertflied = await Blog.find({});
+    // // console.log(insertflied)
+
+    // for (let index = 0; index < insertflied.length; index++) {
+    //   // const element = array[index];
+    //   const data = await Blog.findByIdAndUpdate(insertflied[index]._id, {order: index}, {
+    //     new: true, // return the modified document rather than the original
+    //   });
+    // }
+
+    const totalCount = await Blog.countDocuments(sortQuery);
+
+    console.log(totalCount);
     // const data = await Blog.find(sortQuery).skip(skip).limit(limit);
     const data = await Blog.find(sortQuery)
-      .sort({ CreationDate: -1 })
+      .sort({ order: -1 })
       .skip(skip)
       .limit(limit);
-    res.status(200).json({ data, nbHits: data.length });
+    res.status(200).json({ data, nbHits: totalCount });
   } catch (error) {
     res.status(500).json(error);
   }
@@ -66,7 +75,7 @@ const getAllBlog = async (req, res) => {
         const data = await Blog.find({
           Category: { $regex: item.StateName, $options: "i" },
         })
-        .sort({ CreationDate: -1 })
+          .sort({ order: -1 })
           .limit(limit)
           .skip(skip);
         // data.reverse();
@@ -82,11 +91,12 @@ const getAllBlog = async (req, res) => {
       }
     }
     if (name == "block") {
+      console.log("hi");
       for (const item of block) {
         const data = await Blog.find({
           Category: { $regex: item.SectionName, $options: "i" },
         })
-        .sort({ CreationDate: -1 })
+          .sort({ order: -1 })
           .limit(limit)
           .skip(skip);
         // data.reverse();
@@ -100,7 +110,7 @@ const getAllBlog = async (req, res) => {
         result.push(resultItem);
       }
     }
-    
+
     res.status(200).json({ data: result, nbHits: result.length });
   } catch (error) {
     res.status(500).json(error);
@@ -117,10 +127,15 @@ const postBlog = async (req, res) => {
     console.log(items);
 
     const createdBlogs = [];
-    for (const category of categ) {
+    const totaldoc = await Blog.countDocuments({});
+
+    for (let i = 0; i < categ.length; i++) {
+      const category = categ[i];
+
       const itemsdata = {
         ...items,
         Category: category,
+        order: totaldoc + i , // Use totaldoc + i for the order field
       };
 
       const result = await Blog.create(itemsdata);
@@ -132,6 +147,7 @@ const postBlog = async (req, res) => {
       .status(200)
       .json({ message: "Blogs created successfully", blogs: createdBlogs });
   } catch (error) {
+    console.log(error);
     res.status(500).json({ message: "Error creating blogs", error });
   }
 };

@@ -4,7 +4,7 @@ const SignupSchema = require('../models/signup')
 
 
 const postlogin = async (req, res) => {
-
+   console.log('hits')
    
    const { User_name, password } = req.body;
    

@@ -176,6 +176,15 @@ const DeleteBlog = async (req, res) => {
 
   try {
 
+    
+
+    
+
+    const result = await Blog.deleteOne({ _id: Id });
+    // Check if the product was found and deleted
+    if (result.deletedCount === 0) {
+      return res.status(404).json({ error: "Product not found" });
+    }
     const insertflied = await Blog.find({});
     console.log(insertflied.length)
 
@@ -186,11 +195,6 @@ const DeleteBlog = async (req, res) => {
       });
     }
 
-    const result = await Blog.deleteOne({ _id: Id });
-    // Check if the product was found and deleted
-    if (result.deletedCount === 0) {
-      return res.status(404).json({ error: "Product not found" });
-    }
     // Respond with a success message
     res.json({ message: "Product deleted successfully" });
   } catch (error) {

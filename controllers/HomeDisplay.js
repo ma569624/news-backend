@@ -1,20 +1,47 @@
 const { HomeDisplay } = require("../models/HomeDisplay");
-const Blog = require("../models/Blog");
+// const Blog = require("../models/Blog");
 const { blockkHelper } = require("./helper/Helper");
 
 const getHomeDisplay = async (req, res) => {
   try {
+
+    // const indexToInsert = 1;
+
+    // // Create the new document
+    // const newData = {
+    //   _id: "661d466161d659488fb1031f",
+    //   order: indexToInsert + 1,
+    // };
+    
+    // // Insert the new document at the specified position in the array
+    // insertflied.splice(indexToInsert, 0, newData);
+    // let insertflied = await HomeDisplay.find({}).sort({order: 1});
+    
+    // // Update the order of the following documents in the array
+    // for (let index = 1; index < insertflied.length; index++) {
+    //   const data = await HomeDisplay.findByIdAndUpdate(
+    //     insertflied[index]._id,
+    //     { order: index + 1 },
+    //     {
+    //       new: true, // return the modified document rather than the original
+    //     }
+    //   );
+    // }
+
     const query = req.query.SectionName;
     let mydata;
-    if(query) {
+    if (query) {
       mydata = await HomeDisplay.find({ SectionName: query });
-    } else {
-      mydata = await HomeDisplay.find({});
+    } 
+    else{
+
+        mydata = await HomeDisplay.find({}).sort({order: 1});
     }
-    mydata = await HomeDisplay.find({});
+    
+
     res.status(200).json(mydata);
   } catch (error) {
-    console.log(error)
+    console.log(error);
     res.status(400).json({ message: "error created successfully", error });
   }
 };
@@ -23,11 +50,19 @@ const postHomeDisplay = async (req, res) => {
   try {
     console.log(req.body);
     const items = req.body;
-    const data = new HomeDisplay(items);
+    let totaldoc = await HomeDisplay.countDocuments({});
+
+    const itemsdata = {
+        ...items,
+        order: totaldoc+ 1 , // Use totaldoc + i for the order field
+    };
+
+    const data = new HomeDisplay(itemsdata);
     const result = await data.save();
     console.log(result);
     res.status(200).json(result);
   } catch (error) {
+    console.log(error)
     res.status(200).json({ message: "error created successfully", error });
   }
 };
@@ -76,8 +111,21 @@ const DeleteHomeDisplay = async (req, res) => {
     if (result.deletedCount === 0) {
       return res.status(404).json({ error: "Product not found" });
     }
+
+    let insertflied = await HomeDisplay.find({}).sort({order: 1});
+    
+    // Update the order of the following documents in the array
+    for (let index = 1; index < insertflied.length; index++) {
+      const data = await HomeDisplay.findByIdAndUpdate(
+        insertflied[index]._id,
+        { order: index + 1 },
+        {
+          new: true, // return the modified document rather than the original
+        }
+      );
+    }
     // Respond with a success message
-    res.json({ message: "Product deleted successfully" });
+    res.status(200).json({ message: "Product deleted successfully" });
   } catch (error) {
     console.error("Error deleting product:", error);
     res.status(500).json({ error: "Internal Server Error" });
@@ -122,7 +170,18 @@ const MultiDeleteHomeDisplay = async (req, res) => {
           .json({ error: `Product with ID ${id} not found` });
       }
     }
-
+    let insertflied = await HomeDisplay.find({}).sort({order: 1});
+    
+    // Update the order of the following documents in the array
+    for (let index = 1; index < insertflied.length; index++) {
+      const data = await HomeDisplay.findByIdAndUpdate(
+        insertflied[index]._id,
+        { order: index + 1 },
+        {
+          new: true, // return the modified document rather than the original
+        }
+      );
+    }
     // If all items are deleted successfully, send a success response
     res.status(200).json({ message: "Products deleted successfully" });
   } catch (error) {

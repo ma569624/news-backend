@@ -9,7 +9,7 @@ HomeDisplayRouter.route('/blogdisplay').post(upload, postHomeDisplay);
 HomeDisplayRouter.route('/blogdisplay/:id').put(upload, EditHomeDisplay);
 HomeDisplayRouter.route('/blogdisplay/:id').delete(DeleteHomeDisplay);
 
-HomeDisplayRouter.route('/blogdisplay').delete(MultiDeleteHomeDisplay);
-HomeDisplayRouter.route('/blogdisplay').put(MultiEditHomeDisplay);
+HomeDisplayRouter.route('/blogdisplayall').delete(MultiDeleteHomeDisplay);
+HomeDisplayRouter.route('/blogdisplayall').put(MultiEditHomeDisplay);
 
 module.exports = HomeDisplayRouter;

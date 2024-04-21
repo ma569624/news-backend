@@ -29,6 +29,11 @@ const HomeDisplaySchema = new mongoose.Schema({
         type: Boolean,
         default: false,
     },
+    order: {
+        type: Number,
+        require: false,
+        
+    },
     Status: {
         type: String,
         enum: ['active', 'inactive', 'pending'], // Define allowed values
@@ -74,6 +79,7 @@ const RajiyoSchema = new mongoose.Schema({
     order: {
         type: Number,
         require: false,
+
     },
     CreationDate: {
         type: Date,

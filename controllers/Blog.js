@@ -64,7 +64,7 @@ const getAllBlog = async (req, res) => {
 
     let skip = (page - 1) * limit;
 
-    const block = await HomeDisplay.find({ Status: "active" });
+    const block = await HomeDisplay.find({ Status: "active" }).sort({order: 1});
 
     const rajiya = await Rajiyo.find({ Status: "active" });
 
@@ -185,6 +185,7 @@ const DeleteBlog = async (req, res) => {
     if (result.deletedCount === 0) {
       return res.status(404).json({ error: "Product not found" });
     }
+
     const insertflied = await Blog.find({});
     console.log(insertflied.length)
 
@@ -240,6 +241,16 @@ const MultiDeleteBlog = async (req, res) => {
           .status(404)
           .json({ error: `Product with ID ${id} not found` });
       }
+    }
+
+    const insertflied = await Blog.find({});
+    console.log(insertflied.length)
+
+    for (let index = 0; index < insertflied.length; index++) {
+      // const element = array[index];
+      const data = await Blog.findByIdAndUpdate(insertflied[index]._id, {order: index}, {
+        new: true, // return the modified document rather than the original
+      });
     }
 
     // If all items are deleted successfully, send a success response

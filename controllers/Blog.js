@@ -12,7 +12,7 @@ const getBlog = async (req, res) => {
     const tajasamachar = req.query.tajasamachar || "";
     const Id = req.query._id || "";
     const Status = req.query.Status || "";
-
+    
     let skip = (page - 1) * limit;
     let sortQuery;
     if (Category) {
@@ -33,7 +33,7 @@ const getBlog = async (req, res) => {
     }
 
     // const insertflied = await Blog.find({});
-    // // console.log(insertflied)
+    // console.log(insertflied.length)
 
     // for (let index = 0; index < insertflied.length; index++) {
     //   // const element = array[index];
@@ -135,7 +135,7 @@ const postBlog = async (req, res) => {
       const itemsdata = {
         ...items,
         Category: category,
-        order: totaldoc + i , // Use totaldoc + i for the order field
+        order: totaldoc + i + 1 , // Use totaldoc + i for the order field
       };
 
       const result = await Blog.create(itemsdata);
@@ -175,6 +175,17 @@ const DeleteBlog = async (req, res) => {
   console.log(splitarray);
 
   try {
+
+    const insertflied = await Blog.find({});
+    console.log(insertflied.length)
+
+    for (let index = 0; index < insertflied.length; index++) {
+      // const element = array[index];
+      const data = await Blog.findByIdAndUpdate(insertflied[index]._id, {order: index}, {
+        new: true, // return the modified document rather than the original
+      });
+    }
+
     const result = await Blog.deleteOne({ _id: Id });
     // Check if the product was found and deleted
     if (result.deletedCount === 0) {

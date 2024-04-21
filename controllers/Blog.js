@@ -6,10 +6,11 @@ const getBlog = async (req, res) => {
   console.log("test");
 
   try {
+
     const page = Number(req.query.page) || 1;
     const limit = Number(req.query.limit) || 8;
     const Category = req.query.Category || "";
-    const tajasamachar = req.query.tajasamachar || "";
+    const Headline = req.query.Headline || "";
     const Id = req.query._id || "";
     const Status = req.query.Status || "";
     
@@ -25,8 +26,8 @@ const getBlog = async (req, res) => {
         sortQuery = { Category: { $regex: Category, $options: "i" } };
       }
     }
-    if (tajasamachar) {
-      sortQuery = { tajasamachar: { $regex: tajasamachar, $options: "i" } };
+    if (Headline) {
+      sortQuery = { Headline: Headline };
     }
     if (Id) {
       sortQuery = { _id: Id };
@@ -52,6 +53,7 @@ const getBlog = async (req, res) => {
       .limit(limit);
     res.status(200).json({ data, nbHits: totalCount });
   } catch (error) {
+    console.log(error)
     res.status(500).json(error);
   }
 };
@@ -175,10 +177,6 @@ const DeleteBlog = async (req, res) => {
   console.log(splitarray);
 
   try {
-
-    
-
-    
 
     const result = await Blog.deleteOne({ _id: Id });
     // Check if the product was found and deleted

@@ -5,12 +5,12 @@ const BlogSchema = new mongoose.Schema({
         type: [String],
         required: false,
     },
-    tajasamachar:{
-        type: String,
+    Headline:{
+        type: Boolean,
         required: false,
     },
 
-    // Position: {
+    // StateName: {
     //     type: [String],
     //     required: false,
     // },

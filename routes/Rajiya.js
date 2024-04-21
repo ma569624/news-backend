@@ -10,8 +10,8 @@ RajiyoRouter.route('/rajiya/:id').put(upload, EditRajiyo);
 RajiyoRouter.route('/rajiya/:id').delete(DeleteRajiyo);
 
 
-RajiyoRouter.route('/rajiya').delete(MultiDeleteRajiyo);
-RajiyoRouter.route('/rajiya').put(MultiEditRajiyo);
+RajiyoRouter.route('/allrajiya').delete(MultiDeleteRajiyo);
+RajiyoRouter.route('/allrajiya').put(MultiEditRajiyo);
 
 
 module.exports = RajiyoRouter;

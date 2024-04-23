@@ -80,6 +80,7 @@ const getAllBlog = async (req, res) => {
           .sort({ order: -1 })
           .limit(limit)
           .skip(skip);
+          //this is intial 
         // data.reverse();
         //   console.log(data);
         // const resultItem = {};

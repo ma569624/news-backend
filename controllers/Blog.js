@@ -62,13 +62,15 @@ const getAllBlog = async (req, res) => {
   try {
     const page = 1;
     const name = req.query.name;
-    const limit = 13;
+    const limit = 5;
 
     let skip = (page - 1) * limit;
 
-    const block = await HomeDisplay.find({ Status: "active" }).sort({order: 1});
+    const block = await HomeDisplay.find({ Status: "active" }).sort({order: 1}) .limit(limit)
+    .skip(skip);
 
-    const rajiya = await Rajiyo.find({ Status: "active" });
+    const rajiya = await Rajiyo.find({ Status: "active" }) .limit(limit)
+    .skip(skip);
 
     const result = [];
 

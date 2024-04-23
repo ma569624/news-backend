@@ -1,6 +1,8 @@
 const Blog = require("../models/Blog");
 const { BlogHelper } = require("./helper/Helper");
 const { HomeDisplay, Rajiyo } = require("../models/HomeDisplay");
+const Category = require("../models/Category");
+
 
 const getBlog = async (req, res) => {
   console.log("test");
@@ -61,58 +63,78 @@ const getBlog = async (req, res) => {
 const getAllBlog = async (req, res) => {
   try {
     const page = 1;
-    const name = req.query.name;
+    const sortQuery = req.query.name;
     const limit = 13;
 
     let skip = (page - 1) * limit;
+    
+    // Category
+    const categorydata = await Category.find({ location: sortQuery, Status: "active" }).sort({order: 1});
 
-    const block = await HomeDisplay.find({ Status: "active" }).sort({order: 1});
 
-    const rajiya = await Rajiyo.find({ Status: "active" });
+    // const block = await HomeDisplay.find({ Status: "active" }).sort({order: 1});
+
+    // const rajiya = await Rajiyo.find({ Status: "active" });
 
     const result = [];
 
-    if (name == "rajiya") {
-      for (const item of rajiya) {
-        const data = await Blog.find({
-          Category: { $regex: item.StateName, $options: "i" },
-        })
-          .sort({ order: -1 })
-          .limit(limit)
-          .skip(skip);
-          //this is intial 
-        // data.reverse();
-        //   console.log(data);
-        // const resultItem = {};
-        // resultItem[item] = data;
-        const resultItem = {
-          section: item,
-          data: data,
-        };
 
-        result.push(resultItem);
-      }
+    for (const item of categorydata) {
+      const data = await Blog.find({
+        Category: { $regex: item.category, $options: "i" },
+      })
+        .sort({ order: -1 })
+        .limit(limit)
+        .skip(skip);
+      const resultItem = {
+        section: item,
+        data: data,
+      };
+      result.push(resultItem);
     }
-    if (name == "block") {
-      console.log("hi");
-      for (const item of block) {
-        const data = await Blog.find({
-          Category: { $regex: item.SectionName, $options: "i" },
-        })
-          .sort({ order: -1 })
-          .limit(limit)
-          .skip(skip);
-        // data.reverse();
-        //   console.log(data);
-        // const resultItem = {};
-        // resultItem[item] = data;
-        const resultItem = {
-          section: item,
-          data: data,
-        };
-        result.push(resultItem);
-      }
-    }
+    console.log('HIT')
+
+    // if (name == "rajiya") {
+    //   for (const item of rajiya) {
+    //     const data = await Blog.find({
+    //       Category: { $regex: item.StateName, $options: "i" },
+    //     })
+    //       .sort({ order: -1 })
+    //       .limit(limit)
+    //       .skip(skip);
+    //       //this is intial 
+    //     // data.reverse();
+    //     //   console.log(data);
+    //     // const resultItem = {};
+    //     // resultItem[item] = data;
+    //     const resultItem = {
+    //       section: item,
+    //       data: data,
+    //     };
+
+    //     result.push(resultItem);
+    //   }
+    // }
+    // if (name == "block") {
+    //   console.log("hi");
+    //   for (const item of block) {
+    //     const data = await Blog.find({
+    //       Category: { $regex: item.SectionName, $options: "i" },
+    //     })
+    //       .sort({ order: -1 })
+    //       .limit(limit)
+    //       .skip(skip);
+    //     // data.reverse();
+    //     //   console.log(data);
+    //     // const resultItem = {};
+    //     // resultItem[item] = data;
+    //     const resultItem = {
+    //       section: item,
+    //       data: data,
+    //     };
+    //     result.push(resultItem);
+    //   }
+    // }
 
     res.status(200).json({ data: result, nbHits: result.length });
   } catch (error) {

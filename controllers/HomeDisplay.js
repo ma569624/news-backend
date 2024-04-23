@@ -51,12 +51,10 @@ const postHomeDisplay = async (req, res) => {
     console.log(req.body);
     const items = req.body;
     let totaldoc = await HomeDisplay.countDocuments({});
-
     const itemsdata = {
         ...items,
         order: totaldoc+ 1 , // Use totaldoc + i for the order field
     };
-
     const data = new HomeDisplay(itemsdata);
     const result = await data.save();
     console.log(result);

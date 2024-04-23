@@ -3,6 +3,7 @@ const Blog = require("../models/Blog");
 const { RajiyaHelper } = require("./helper/Helper");
 
 const getRajiyo = async (req, res) => {
+  
   try {
     const mydata = await Rajiyo.find({});
     // console.log(mydata)

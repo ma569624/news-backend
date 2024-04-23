@@ -69,7 +69,7 @@ const getAllBlog = async (req, res) => {
     let skip = (page - 1) * limit;
     
     // Category
-    const categorydata = await Category.find({ location: sortQuery, Status: "active" }).sort({order: 1});
+    const categorydata = await Category.find({ location: { $regex: sortQuery, $options: 'i' }, Status: "active" }).sort({order: 1});
 
 
     // const block = await HomeDisplay.find({ Status: "active" }).sort({order: 1});

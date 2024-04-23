@@ -32,10 +32,7 @@ const getCategory = async (req, res) => {
     const sortQuery = req.query.location;
     let skip = (page - 1) * limit;
 
-    const query = { location: sortQuery };
-    if (Status !== "") {
-      query.Status = Status;
-    }
+    
 
     const totalCount = await Category.countDocuments(query);
     const mydata = await Category.find(query)
@@ -59,7 +56,7 @@ const postCategory = async (req, res) => {
       ...items,
       order: totaldoc + 1, // Use totaldoc + i for the order field
     };
-    
+
     const data = new Category(itemsdata);
     const result = await data.save();
     console.log(result);

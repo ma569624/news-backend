@@ -4,7 +4,6 @@ const { HomeDisplay, Rajiyo } = require("../models/HomeDisplay");
 const Category = require("../models/Category");
 
 const getBlog = async (req, res) => {
-  console.log("test");
 
   try {
     const page = Number(req.query.page) || 1;
@@ -13,7 +12,7 @@ const getBlog = async (req, res) => {
     const Headline = req.query.Headline || "";
     const Id = req.query._id || "";
     const Status = req.query.Status || "";
-
+    const order = req.query.order || "desc";
 
     let skip = (page - 1) * limit;
     let sortQuery;
@@ -59,6 +58,9 @@ const getBlog = async (req, res) => {
     }
     if (Id) {
       sortQuery = { _id: Id };
+    }
+    if (order) {
+      sortQuery = { order: order };
     }
 
     // const insertflied = await Blog.find({});

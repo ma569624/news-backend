@@ -12,7 +12,7 @@ const getBlog = async (req, res) => {
     const Headline = req.query.Headline || "";
     const Id = req.query._id || "";
     const Status = req.query.Status || "";
-    const order = req.query.order || "desc";
+    const order = req.query.order || "";
 
     let skip = (page - 1) * limit;
     let sortQuery;
@@ -59,6 +59,8 @@ const getBlog = async (req, res) => {
     if (Id) {
       sortQuery = { _id: Id };
     }
+
+
     if (order) {
       sortQuery = { order: order };
     }

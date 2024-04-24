@@ -47,7 +47,7 @@ const getBlog = async (req, res) => {
             Category: { $regex: category, $options: "i" },
           };
         }
-        
+        //new commit
       } 
       // else {
       //   sortQuery = { Category: { $regex: category, $options: "i" } };

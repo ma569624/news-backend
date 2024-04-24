@@ -3,30 +3,56 @@ const { BlogHelper } = require("./helper/Helper");
 const { HomeDisplay, Rajiyo } = require("../models/HomeDisplay");
 const Category = require("../models/Category");
 
-
 const getBlog = async (req, res) => {
   console.log("test");
 
   try {
-
     const page = Number(req.query.page) || 1;
     const limit = Number(req.query.limit) || 8;
-    const Category = req.query.Category || "";
+    const category = req.query.Category || "";
     const Headline = req.query.Headline || "";
     const Id = req.query._id || "";
     const Status = req.query.Status || "";
-    
+
+
     let skip = (page - 1) * limit;
     let sortQuery;
-    if (Category) {
-      if (Status) {
+    console.log(category)
+    
+    if (category) {
+      if(category == 'title1' || category =='title2' || category =='title3' || category =='title4'){
+        const filterdata = await Category.find({location: category})
+        console.log(filterdata[0].category);
         sortQuery = {
-          Status: Status,
-          Category: { $regex: Category, $options: "i" },
+          Category: { $regex: filterdata[0].category, $options: "i" },
         };
-      } else {
-        sortQuery = { Category: { $regex: Category, $options: "i" } };
       }
+      else{
+        sortQuery = {
+          Category: { $regex: category, $options: "i" },
+        };
+      }
+      if (Status) {
+        console.log(Status)
+        if(category == 'title1' || category =='title2' || category =='title3' || category =='title4'){
+          const filterdata = await Category.find({location: category})
+          console.log(filterdata[0].category);
+          sortQuery = {
+            Status: Status,
+            Category: { $regex: filterdata[0].category, $options: "i" },
+          };
+        }
+        else{
+          sortQuery = {
+            Status: Status,
+            Category: { $regex: category, $options: "i" },
+          };
+        }
+        
+      } 
+      // else {
+      //   sortQuery = { Category: { $regex: category, $options: "i" } };
+      // }
     }
     if (Headline) {
       sortQuery = { Headline: Headline };
@@ -45,9 +71,25 @@ const getBlog = async (req, res) => {
     //   });
     // }
 
-    const totalCount = await Blog.countDocuments(sortQuery);
+    //for update flied
+    //     const insertFields = await Blog.find({ Category: 'TopKhabare' });
 
-    console.log(totalCount);
+    // for (let index = 0; index < insertFields.length; index++) {
+    //   const updatedData = await Blog.findByIdAndUpdate(
+    //     insertFields[index]._id,
+    //     { $set: { Category: ['प्रमुख समाचार'] } }, // Replace all existing values with ['प्रमुख समाचार']
+    //     {
+    //       new: true, // Return the modified document rather than the original
+    //     }
+    //   );
+    //   console.log(updatedData); // Log the updated document
+    // }
+
+    // res.status(200).json(insertFields);
+
+    const totalCount = await Blog.countDocuments(sortQuery);
+    
+    console.log(sortQuery);
     // const data = await Blog.find(sortQuery).skip(skip).limit(limit);
     const data = await Blog.find(sortQuery)
       .sort({ order: -1 })
@@ -55,7 +97,7 @@ const getBlog = async (req, res) => {
       .limit(limit);
     res.status(200).json({ data, nbHits: totalCount });
   } catch (error) {
-    console.log(error)
+    console.log(error);
     res.status(500).json(error);
   }
 };
@@ -64,20 +106,21 @@ const getAllBlog = async (req, res) => {
   try {
     const page = 1;
     const sortQuery = req.query.name;
-    const limit = 13;
+    const limit = 12;
 
     let skip = (page - 1) * limit;
-    
-    // Category
-    const categorydata = await Category.find({ location: { $regex: sortQuery, $options: 'i' }, Status: "active" }).sort({order: 1});
 
+    // Category
+    const categorydata = await Category.find({
+      location: { $regex: sortQuery, $options: "i" },
+      Status: "active",
+    }).sort({ order: 1 });
 
     // const block = await HomeDisplay.find({ Status: "active" }).sort({order: 1});
 
     // const rajiya = await Rajiyo.find({ Status: "active" });
 
     const result = [];
-
 
     for (const item of categorydata) {
       const data = await Blog.find({
@@ -92,7 +135,7 @@ const getAllBlog = async (req, res) => {
       };
       result.push(resultItem);
     }
-    console.log('HIT')
+    console.log("HIT");
 
     // if (name == "rajiya") {
     //   for (const item of rajiya) {
@@ -102,7 +145,7 @@ const getAllBlog = async (req, res) => {
     //       .sort({ order: -1 })
     //       .limit(limit)
     //       .skip(skip);
-    //       //this is intial 
+    //       //this is intial
     //     // data.reverse();
     //     //   console.log(data);
     //     // const resultItem = {};
@@ -160,7 +203,7 @@ const postBlog = async (req, res) => {
       const itemsdata = {
         ...items,
         Category: category,
-        order: totaldoc + i + 1 , // Use totaldoc + i for the order field
+        order: totaldoc + i + 1, // Use totaldoc + i for the order field
       };
 
       const result = await Blog.create(itemsdata);
@@ -200,7 +243,6 @@ const DeleteBlog = async (req, res) => {
   console.log(splitarray);
 
   try {
-
     const result = await Blog.deleteOne({ _id: Id });
     // Check if the product was found and deleted
     if (result.deletedCount === 0) {
@@ -208,13 +250,17 @@ const DeleteBlog = async (req, res) => {
     }
 
     const insertflied = await Blog.find({});
-    console.log(insertflied.length)
+    console.log(insertflied.length);
 
     for (let index = 0; index < insertflied.length; index++) {
       // const element = array[index];
-      const data = await Blog.findByIdAndUpdate(insertflied[index]._id, {order: index}, {
-        new: true, // return the modified document rather than the original
-      });
+      const data = await Blog.findByIdAndUpdate(
+        insertflied[index]._id,
+        { order: index },
+        {
+          new: true, // return the modified document rather than the original
+        }
+      );
     }
 
     // Respond with a success message
@@ -265,13 +311,17 @@ const MultiDeleteBlog = async (req, res) => {
     }
 
     const insertflied = await Blog.find({});
-    console.log(insertflied.length)
+    console.log(insertflied.length);
 
     for (let index = 0; index < insertflied.length; index++) {
       // const element = array[index];
-      const data = await Blog.findByIdAndUpdate(insertflied[index]._id, {order: index}, {
-        new: true, // return the modified document rather than the original
-      });
+      const data = await Blog.findByIdAndUpdate(
+        insertflied[index]._id,
+        { order: index },
+        {
+          new: true, // return the modified document rather than the original
+        }
+      );
     }
 
     // If all items are deleted successfully, send a success response

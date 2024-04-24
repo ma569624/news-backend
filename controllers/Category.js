@@ -29,19 +29,33 @@ const getCategory = async (req, res) => {
     const Status = req.query.Status || "";
     const page = Number(req.query.page) || 1;
     const limit = Number(req.query.limit) || 8;
-    const sortQuery = req.query.location;
+    const Query = req.query.location;
+    const category = req.query.category || "";
     let skip = (page - 1) * limit;
+    console.log(req.query)
+    let sortQuery
+    if (category) {
+      sortQuery = { category: category };
+    }
+    if (Query) {
+      sortQuery = { location: Query };
+    }
+    if(Status){
+      sortQuery = {
+        Status: Status
+      }
+    }
 
     
-
-    const totalCount = await Category.countDocuments(query);
-    const mydata = await Category.find(query)
+    console.warn(sortQuery);
+    const totalCount = await Category.countDocuments(sortQuery);
+    const data = await Category.find(sortQuery)
       .sort({ order: -1 })
       .skip(skip)
       .limit(limit);
     console.log("Data transferred successfully");
-    res.status(200).json({ mydata, nbHits: totalCount });
-    console.log(mydata);
+    res.status(200).json({ data, nbHits: totalCount });
+    // console.log(mydata);
   } catch (error) {
     console.log(error);
   }

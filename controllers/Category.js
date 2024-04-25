@@ -63,11 +63,11 @@ const getCategory = async (req, res) => {
     }
     else{
       console.log(sortQuery)
-      const totalCount = await Category.countDocuments(sortQuery);
+      // const totalCount = await Category.countDocuments(sortQuery);
       const data = await Category.find(sortQuery).sort({ order: 1 });
       
       console.log("Data transferred successfully");
-      res.status(200).json({ data, nbHits: totalCount });
+      res.status(200).json(data);
     }
     
   } catch (error) {

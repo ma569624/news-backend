@@ -65,7 +65,7 @@ const getCategory = async (req, res) => {
       console.log(sortQuery)
       // const totalCount = await Category.countDocuments(sortQuery);
       const data = await Category.find(sortQuery).sort({ order: 1 });
-      
+      console.log(data)
       console.log("Data transferred successfully");
       res.status(200).json(data);
     }
@@ -90,10 +90,8 @@ const postCategory = async (req, res) => {
       order: totaldoc + 1, // Use totaldoc + i for the order field
     };
     const data = new Category(itemsdata);
-    // console.log(data);
     const result = await data.save();
-    console.log(result);
-    // res.status(200).json(result);
+    res.status(200).json(result);
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "error created successfully", error });

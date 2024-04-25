@@ -45,7 +45,7 @@ const getCategory = async (req, res) => {
         Status: Status,
       };
     }
-    let filterdata= [];
+    let filterdata = [];
     if (!sortQuery) {
       let filterdataTitle = await Category.find({
         location: { $regex: "title", $options: "i" },
@@ -54,22 +54,24 @@ const getCategory = async (req, res) => {
       let filterdatablocks = await Category.find({
         location: { $regex: "block", $options: "i" },
       }).sort({ order: 1 });
-      
+
       let filterdatastate = await Category.find({
         location: { $regex: "state", $options: "i" },
       }).sort({ order: 1 });
-      filterdata = [...filterdataTitle, ...filterdatablocks, ...filterdatastate];
+      filterdata = [
+        ...filterdataTitle,
+        ...filterdatablocks,
+        ...filterdatastate,
+      ];
       res.status(200).json(filterdata);
-    }
-    else{
-      console.log(sortQuery)
+    } else {
+      console.log(sortQuery);
       // const totalCount = await Category.countDocuments(sortQuery);
       const data = await Category.find(sortQuery).sort({ order: 1 });
-      console.log(data)
+      console.log(data);
       console.log("Data transferred successfully");
       res.status(200).json(data);
     }
-    
   } catch (error) {
     console.log(error);
     res.status(500).json(error);
@@ -78,14 +80,25 @@ const getCategory = async (req, res) => {
 
 const postCategory = async (req, res) => {
   try {
+    let categorylogo;
+    let headinglogo;
+    if (categorylogo) {
+      categorylogo = req.files.categorylogo[0].path.substring(
+        req.files.categorylogo[0].path.indexOf("\\images")
+      );
+    }
+    if (headinglogo) {
+      headinglogo = req.files.headinglogo[0].path.substring(
+        req.files.headinglogo[0].path.indexOf("\\images")
+      );
+    }
 
-    const categorylogo = req.files.categorylogo[0].path.substring(req.files.categorylogo[0].path.indexOf("\\images"))
-    const headinglogo = req.files.headinglogo[0].path.substring(req.files.headinglogo[0].path.indexOf("\\images")); 
     const items = req.body;
     let totaldoc = await Category.countDocuments({});
     const itemsdata = {
       ...items,
       categorylogo: categorylogo,
+
       headinglogo: headinglogo,
       order: totaldoc + 1, // Use totaldoc + i for the order field
     };
@@ -100,8 +113,12 @@ const postCategory = async (req, res) => {
 
 const EditCategory = async (req, res) => {
   try {
-    const categorylogo = req.files.categorylogo[0].path.substring(req.files.categorylogo[0].path.indexOf("\\images"))
-    const headinglogo = req.files.headinglogo[0].path.substring(req.files.headinglogo[0].path.indexOf("\\images")); 
+    const categorylogo = req.files.categorylogo[0].path.substring(
+      req.files.categorylogo[0].path.indexOf("\\images")
+    );
+    const headinglogo = req.files.headinglogo[0].path.substring(
+      req.files.headinglogo[0].path.indexOf("\\images")
+    );
     const items = req.body;
     const itemsdata = {
       ...items,
@@ -123,7 +140,7 @@ const EditCategory = async (req, res) => {
 const DeleteCategory = async (req, res) => {
   const Id = req.params.id;
 
-  try{
+  try {
     const result = await Category.deleteOne({ _id: Id });
     if (result.deletedCount === 0) {
       return res.status(404).json({ error: "Product not found" });
@@ -135,7 +152,6 @@ const DeleteCategory = async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
-
 
 const MultiEditCategory = async (req, res) => {
   const { ids, status } = req.body;
@@ -174,8 +190,8 @@ const MultiDeleteCategory = async (req, res) => {
           .json({ error: `Product with ID ${id} not found` });
       }
     }
-    let insertflied = await Category.find({}).sort({order: 1});
-    
+    let insertflied = await Category.find({}).sort({ order: 1 });
+
     // Update the order of the following documents in the array
     for (let index = 1; index < insertflied.length; index++) {
       const data = await Category.findByIdAndUpdate(
@@ -195,4 +211,11 @@ const MultiDeleteCategory = async (req, res) => {
   }
 };
 
-module.exports = { getCategory, postCategory, EditCategory, DeleteCategory, MultiEditCategory, MultiDeleteCategory };
+module.exports = {
+  getCategory,
+  postCategory,
+  EditCategory,
+  DeleteCategory,
+  MultiEditCategory,
+  MultiDeleteCategory,
+};

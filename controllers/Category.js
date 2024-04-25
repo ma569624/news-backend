@@ -78,32 +78,44 @@ const getCategory = async (req, res) => {
 
 const postCategory = async (req, res) => {
   try {
-    console.log(req.body);
+
+    const categorylogo = req.files.categorylogo[0].path.substring(req.files.categorylogo[0].path.indexOf("\\images"))
+    const headinglogo = req.files.headinglogo[0].path.substring(req.files.headinglogo[0].path.indexOf("\\images")); 
     const items = req.body;
     let totaldoc = await Category.countDocuments({});
     const itemsdata = {
       ...items,
+      categorylogo: categorylogo,
+      headinglogo: headinglogo,
       order: totaldoc + 1, // Use totaldoc + i for the order field
     };
-
     const data = new Category(itemsdata);
+    // console.log(data);
     const result = await data.save();
     console.log(result);
-    res.status(200).json(result);
+    // res.status(200).json(result);
   } catch (error) {
     console.log(error);
-    res.status(200).json({ message: "error created successfully", error });
+    res.status(500).json({ message: "error created successfully", error });
   }
 };
 
 const EditCategory = async (req, res) => {
   try {
-    const data = req.body;
+    const categorylogo = req.files.categorylogo[0].path.substring(req.files.categorylogo[0].path.indexOf("\\images"))
+    const headinglogo = req.files.headinglogo[0].path.substring(req.files.headinglogo[0].path.indexOf("\\images")); 
+    const items = req.body;
+    const itemsdata = {
+      ...items,
+      categorylogo: categorylogo,
+      headinglogo: headinglogo,
+    };
+
     const itemId = req.params.id;
-    const updatedItem = await Category.findByIdAndUpdate(itemId, data, {
+    const updatedItem = await Category.findByIdAndUpdate(itemId, itemsdata, {
       new: true, // return the modified document rather than the original
     });
-    res.json(updatedItem);
+    res.status(200).json(updatedItem);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Internal Server Error" });
@@ -113,19 +125,76 @@ const EditCategory = async (req, res) => {
 const DeleteCategory = async (req, res) => {
   const Id = req.params.id;
 
-  try {
-    // Use deleteOne to delete a document by its ID
+  try{
     const result = await Category.deleteOne({ _id: Id });
-    // Check if the product was found and deleted
     if (result.deletedCount === 0) {
       return res.status(404).json({ error: "Product not found" });
     }
-    // Respond with a success message
-    res.json({ message: "Product deleted successfully" });
+
+    res.status(200).json({ message: "Product deleted successfully" });
   } catch (error) {
     console.error("Error deleting product:", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
-module.exports = { getCategory, postCategory, EditCategory, DeleteCategory };
+
+const MultiEditCategory = async (req, res) => {
+  const { ids, status } = req.body;
+  console.log(req.body);
+  try {
+    // Update the status of multiple items using updateMany
+    const result = await Category.updateMany(
+      { _id: { $in: ids } }, // Match items with IDs in the provided array
+      { $set: { Status: status } } // Set the new status
+    );
+
+    if (result.nModified === 0) {
+      return res
+        .status(404)
+        .json({ error: "No products found with the provided IDs" });
+    }
+    res.status(200).json({ message: "Status updated successfully" });
+  } catch (error) {
+    console.error("Error updating status:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+const MultiDeleteCategory = async (req, res) => {
+  const { ids } = req.body;
+  console.log(ids);
+  try {
+    // Use a loop to iterate through each ID and delete the corresponding item
+    for (const id of ids) {
+      // Perform deletion operation for each ID
+      const result = await Category.findByIdAndDelete(id); // Assuming Rajiyo is your Mongoose model
+      if (result.deletedCount === 0) {
+        // If the item with the specified ID is not found, return a 404 error
+        return res
+          .status(404)
+          .json({ error: `Product with ID ${id} not found` });
+      }
+    }
+    let insertflied = await Category.find({}).sort({order: 1});
+    
+    // Update the order of the following documents in the array
+    for (let index = 1; index < insertflied.length; index++) {
+      const data = await Category.findByIdAndUpdate(
+        insertflied[index]._id,
+        { order: index + 1 },
+        {
+          new: true, // return the modified document rather than the original
+        }
+      );
+    }
+    // If all items are deleted successfully, send a success response
+    res.status(200).json({ message: "Products deleted successfully" });
+  } catch (error) {
+    // If an error occurs during deletion, handle it and send an error response
+    console.error("Error deleting products:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+module.exports = { getCategory, postCategory, EditCategory, DeleteCategory, MultiEditCategory, MultiDeleteCategory };

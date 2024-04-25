@@ -82,12 +82,12 @@ const postCategory = async (req, res) => {
   try {
     let categorylogo;
     let headinglogo;
-    if (categorylogo) {
+    if (req.files.categorylogo) {
       categorylogo = req.files.categorylogo[0].path.substring(
         req.files.categorylogo[0].path.indexOf("\\images")
       );
     }
-    if (headinglogo) {
+    if (req.files.headinglogo) {
       headinglogo = req.files.headinglogo[0].path.substring(
         req.files.headinglogo[0].path.indexOf("\\images")
       );

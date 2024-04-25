@@ -32,32 +32,47 @@ const getCategory = async (req, res) => {
     const Query = req.query.location;
     const category = req.query.category || "";
     let skip = (page - 1) * limit;
-    console.log(req.query)
-    let sortQuery
+    console.log(req.query);
+    let sortQuery;
     if (category) {
       sortQuery = { category: category };
     }
     if (Query) {
-      sortQuery = { location: Query };
+      sortQuery = { location: { $regex: Query, $options: "i" } };
     }
-    if(Status){
+    if (Status) {
       sortQuery = {
-        Status: Status
-      }
+        Status: Status,
+      };
     }
+    let filterdata= [];
+    if (!sortQuery) {
+      let filterdataTitle = await Category.find({
+        location: { $regex: "title", $options: "i" },
+      }).sort({ order: -1 });
 
+      let filterdatablocks = await Category.find({
+        location: { $regex: "block", $options: "i" },
+      }).sort({ order: 1 });
+      
+      let filterdatastate = await Category.find({
+        location: { $regex: "state", $options: "i" },
+      }).sort({ order: 1 });
+      filterdata = [...filterdataTitle, ...filterdatablocks, ...filterdatastate];
+      res.status(200).json(filterdata);
+    }
+    else{
+      console.log(sortQuery)
+      const totalCount = await Category.countDocuments(sortQuery);
+      const data = await Category.find(sortQuery).sort({ order: 1 });
+      
+      console.log("Data transferred successfully");
+      res.status(200).json({ data, nbHits: totalCount });
+    }
     
-    console.warn(sortQuery);
-    const totalCount = await Category.countDocuments(sortQuery);
-    const data = await Category.find(sortQuery)
-      .sort({ order: -1 })
-      .skip(skip)
-      .limit(limit);
-    console.log("Data transferred successfully");
-    res.status(200).json({ data, nbHits: totalCount });
-    // console.log(mydata);
   } catch (error) {
     console.log(error);
+    res.status(500).json(error);
   }
 };
 
@@ -75,7 +90,6 @@ const postCategory = async (req, res) => {
     const result = await data.save();
     console.log(result);
     res.status(200).json(result);
-
   } catch (error) {
     console.log(error);
     res.status(200).json({ message: "error created successfully", error });

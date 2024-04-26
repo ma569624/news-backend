@@ -10,7 +10,7 @@ categoriesRouter.route('/categories').post(upload, postCategory);
 categoriesRouter.route('/categories/:id').put(upload, EditCategory);
 categoriesRouter.route('/categories/:id').delete(DeleteCategory);
 
-categoriesRouter.route('/categories').delete(MultiDeleteCategory);
-categoriesRouter.route('/categories').put(MultiEditCategory);
+categoriesRouter.route('/multicategories').delete(MultiDeleteCategory);
+categoriesRouter.route('/multicategories').put(MultiEditCategory);
 
 module.exports = categoriesRouter;

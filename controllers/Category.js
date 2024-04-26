@@ -98,7 +98,6 @@ const postCategory = async (req, res) => {
     const itemsdata = {
       ...items,
       categorylogo: categorylogo,
-
       headinglogo: headinglogo,
       order: totaldoc + 1, // Use totaldoc + i for the order field
     };
@@ -113,12 +112,20 @@ const postCategory = async (req, res) => {
 
 const EditCategory = async (req, res) => {
   try {
-    const categorylogo = req.files.categorylogo[0].path.substring(
-      req.files.categorylogo[0].path.indexOf("\\images")
-    );
-    const headinglogo = req.files.headinglogo[0].path.substring(
-      req.files.headinglogo[0].path.indexOf("\\images")
-    );
+    let categorylogo;
+    let headinglogo;
+
+    if (req.files.categorylogo) {
+      categorylogo = req.files.categorylogo[0].path.substring(
+        req.files.categorylogo[0].path.indexOf("\\images")
+      );
+    }
+    
+    if (req.files.headinglogo) {
+      headinglogo = req.files.headinglogo[0].path.substring(
+        req.files.headinglogo[0].path.indexOf("\\images")
+      );
+    }
     const items = req.body;
     const itemsdata = {
       ...items,

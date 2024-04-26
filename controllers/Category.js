@@ -1,6 +1,6 @@
 const Category = require("../models/Category");
 const { HomeDisplay } = require("../models/HomeDisplay");
-const { Rajiyo } = require("../models/HomeDisplay");
+const Blog = require("../models/Blog");
 
 const getCategory = async (req, res) => {
   // console.log(mydata)
@@ -31,8 +31,10 @@ const getCategory = async (req, res) => {
     const limit = Number(req.query.limit) || 8;
     const Query = req.query.location;
     const category = req.query.category || "";
+    const Id = req.query.id;
+    console.log(Id);
     let skip = (page - 1) * limit;
-    console.log(req.query);
+    // console.log(req.query);
     let sortQuery;
     if (category) {
       sortQuery = { category: category };
@@ -45,8 +47,15 @@ const getCategory = async (req, res) => {
         Status: Status,
       };
     }
+    
     let filterdata = [];
     if (!sortQuery) {
+      if (Id) {
+        const data = await Category.find({_id: Id});
+        // console.log(data);
+        console.log("Data transferred successfully");
+        res.status(200).json(data);
+      }else{
       let filterdataTitle = await Category.find({
         location: { $regex: "title", $options: "i" },
       }).sort({ order: -1 });
@@ -64,11 +73,12 @@ const getCategory = async (req, res) => {
         ...filterdatastate,
       ];
       res.status(200).json(filterdata);
+    }
     } else {
-      console.log(sortQuery);
+      // console.log(sortQuery);
       // const totalCount = await Category.countDocuments(sortQuery);
       const data = await Category.find(sortQuery).sort({ order: 1 });
-      console.log(data);
+      // console.log(data);
       console.log("Data transferred successfully");
       res.status(200).json(data);
     }
@@ -80,6 +90,8 @@ const getCategory = async (req, res) => {
 
 const postCategory = async (req, res) => {
   try {
+    // console.log(req.body);
+    // console.log(req.files);
     let categorylogo;
     let headinglogo;
     if (req.files.categorylogo) {
@@ -92,7 +104,7 @@ const postCategory = async (req, res) => {
         req.files.headinglogo[0].path.indexOf("\\images")
       );
     }
-
+   
     const items = req.body;
     let totaldoc = await Category.countDocuments({});
     const itemsdata = {
@@ -107,6 +119,39 @@ const postCategory = async (req, res) => {
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "error created successfully", error });
+  }
+};
+const EditHomeDisplay = async (req, res) => {
+  console.log(req.body.SectionName);
+  const categoriesquery = req.body.SectionName;
+  try {
+    const data = blockkHelper(req);
+    console.log(data);
+    const itemId = req.params.id;
+    const exitsdata = await HomeDisplay.findById(itemId);
+    const updatedItem = await HomeDisplay.findByIdAndUpdate(itemId, data, {
+      new: true, // return the modified document rather than the original
+    });
+
+    if (categoriesquery) {
+      console.log("change categorie");
+      const docs = await Blog.find({
+        Category: { $regex: `${exitsdata.SectionName}` },
+      });
+
+      const result = await Blog.updateMany(
+        { Category: { $regex: `${exitsdata.SectionName}` } },
+        { $set: { "Category.$[]": `${categoriesquery}` } },
+        { arrayFilters: [{ element: `${exitsdata.SectionName}]` }] }
+      );
+
+      console.log(`${result.nModified} documents updated.`);
+    }
+
+    res.json(updatedItem);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
@@ -132,11 +177,30 @@ const EditCategory = async (req, res) => {
       categorylogo: categorylogo,
       headinglogo: headinglogo,
     };
-
+    const categoriesquery = req.body.category;
     const itemId = req.params.id;
+    console.log(itemId)
+    const exitsdata = await Category.find({_id: itemId});
+    console.log(exitsdata[0].category)
     const updatedItem = await Category.findByIdAndUpdate(itemId, itemsdata, {
       new: true, // return the modified document rather than the original
     });
+    if (categoriesquery) {
+      console.log("change categorie");
+      
+
+      const result = await Blog.updateMany(
+        { Category: { $regex: `${exitsdata[0].category}` } },
+        { $set: { "Category.$[]": `${categoriesquery}` } },
+        { arrayFilters: [{ element: `${exitsdata[0].category}]` }] }
+      );
+
+      console.log(result.modifiedCount);
+    }
+
+
+
+
     res.status(200).json(updatedItem);
   } catch (error) {
     console.error(error);
@@ -145,14 +209,29 @@ const EditCategory = async (req, res) => {
 };
 
 const DeleteCategory = async (req, res) => {
-  const Id = req.params.id;
 
+  const Id = req.params.id;
   try {
+    // Use deleteOne to delete a document by its ID
     const result = await Category.deleteOne({ _id: Id });
+    // Check if the product was found and deleted
     if (result.deletedCount === 0) {
       return res.status(404).json({ error: "Product not found" });
     }
 
+    let insertflied = await Category.find({}).sort({order: 1});
+    
+    // Update the order of the following documents in the array
+    for (let index = 1; index < insertflied.length; index++) {
+      const data = await Category.findByIdAndUpdate(
+        insertflied[index]._id,
+        { order: index + 1 },
+        {
+          new: true, // return the modified document rather than the original
+        }
+      );
+    }
+    // Respond with a success message
     res.status(200).json({ message: "Product deleted successfully" });
   } catch (error) {
     console.error("Error deleting product:", error);
@@ -163,6 +242,8 @@ const DeleteCategory = async (req, res) => {
 const MultiEditCategory = async (req, res) => {
   const { ids, status } = req.body;
   console.log(req.body);
+  console.log('dfnbdfj')
+
   try {
     // Update the status of multiple items using updateMany
     const result = await Category.updateMany(

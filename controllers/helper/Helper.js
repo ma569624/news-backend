@@ -45,14 +45,8 @@ const ShubhkamnnaHelper = (req) => {
 }
 const BlogHelper = (req) => {
 
-    let ReporterImage, Image, Video, Audio;
-
-    if (req.files.Image1 && req.files.Image1.length > 0) {
-        ReporterImage = `/image/${req.files.Image1[0].filename}`;
-        console.log(req.files.Image1[0].filename);
-    } else {
-        // Handle the case where req.files.Image1 is not defined or empty
-    }
+    let Image, Video, Audio;
+   
 
     if (req.files.Image2 && req.files.Image2.length > 0) {
         Image = `/image/${req.files.Image2[0].filename}`;
@@ -74,11 +68,13 @@ const BlogHelper = (req) => {
 
     const Category = req.body.Category ? req.body.Category.replace(/[\[\]"']/g, '').split(/,(?!\s)/) : [];
     const Status = req.body.Status;
+    const ReporterImage = req.body.ReporterProfile;
     const ReporterName = req.body.ReporterName;
     const Heading = req.body.Heading;
     
     const Matter = req.body.Matter;
     const DatePlace = req.body.DatePlace;
+    const CreationDate = req.body.CreationDate;
     const Capton = req.body.Capton;
     const Subheading = req.body.Subheading;
     const Designation = req.body.Designation;
@@ -86,6 +82,7 @@ const BlogHelper = (req) => {
 
     const data = {
         Headline,
+        CreationDate,
         Status,
         ReporterImage,
         ReporterName,

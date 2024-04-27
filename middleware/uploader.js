@@ -20,6 +20,6 @@ const upload = multer({
     limits: {
         fileSize: 10000000
     }
-}).fields([{ name: 'Image1', maxCount: 1 }, { name: 'Image2', maxCount: 1 },{ name: 'categorylogo', maxCount: 1 }, { name: 'headinglogo', maxCount: 1 }]);
+}).fields([{ name: 'Image1', maxCount: 1 }, { name: 'Image2', maxCount: 1 },{ name: 'categorylogo', maxCount: 1 }, { name: 'headinglogo', maxCount: 1 }, { name: 'profile', maxCount: 1 }]);
 
 module.exports = upload;

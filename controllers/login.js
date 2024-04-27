@@ -14,13 +14,17 @@ const postlogin = async (req, res) => {
 
       const block = user.user_block
       
-      const {name, access_delete, type} = user
-      console.log(type)
+      const {name, access_delete, type, Place, profile, Destination } = user
+  
       const sendinfo = {
+         profile: profile,
+         Destination: Destination,
+         Place: Place,
          name : name,
          access_delete : access_delete,
          type : type === undefined  ? 'user' : type
       }
+      
       console.warn(sendinfo)
       if(!block){
          if (!user) {

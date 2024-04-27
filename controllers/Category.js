@@ -171,6 +171,7 @@ const EditCategory = async (req, res) => {
         req.files.headinglogo[0].path.indexOf("\\images")
       );
     }
+    
     const items = req.body;
     const itemsdata = {
       ...items,

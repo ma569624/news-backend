@@ -5,9 +5,25 @@ const SignupSchema = new mongoose.Schema({
         type: String,
         require: false
     },
+    profile: {
+        type: String,
+        require: false
+    },
+    Destination: {
+        type: String,
+        require: false
+    },
+    Destination: {
+        type: String,
+        require: false
+    },
+    Place: {
+        type: String,
+        require: false
+    },
     email: {
         type: String,   
-        // unique: true,
+        unique: false,
         require: false
     },
     number: {

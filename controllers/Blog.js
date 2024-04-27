@@ -3,69 +3,7 @@ const { BlogHelper } = require("./helper/Helper");
 const { HomeDisplay, Rajiyo } = require("../models/HomeDisplay");
 const Category = require("../models/Category");
 
-const getBlog = async (req, res) => {
-
-  try {
-    const page = Number(req.query.page) || 1;
-    const limit = Number(req.query.limit) || 8;
-    const category = req.query.Category || "";
-    const Headline = req.query.Headline || "";
-    const Id = req.query._id || "";
-    const Status = req.query.Status || "";
-    const order = req.query.order || "";
-
-    let skip = (page - 1) * limit;
-    let sortQuery;
-    console.log(category)
-    
-    if (category) {
-      if(category == 'title1' || category =='title2' || category =='title3' || category =='title4'){
-        const filterdata = await Category.find({location: category})
-        console.log(filterdata[0].category);
-        sortQuery = {
-          Category: { $regex: filterdata[0].category, $options: "i" },
-        };
-      }
-      else{
-        sortQuery = {
-          Category: { $regex: category, $options: "i" },
-        };
-      }
-      if (Status) {
-        console.log(Status)
-        if(category == 'title1' || category =='title2' || category =='title3' || category =='title4'){
-          const filterdata = await Category.find({location: category})
-          console.log(filterdata[0].category);
-          sortQuery = {
-            Status: Status,
-            Category: { $regex: filterdata[0].category, $options: "i" },
-          };
-        }
-        else{
-          sortQuery = {
-            Status: Status,
-            Category: { $regex: category, $options: "i" },
-          };
-        }
-        //new commit
-      } 
-      // else {
-      //   sortQuery = { Category: { $regex: category, $options: "i" } };
-      // }
-    }
-    if (Headline) {
-      sortQuery = { Headline: Headline };
-    }
-    if (Id) {
-      sortQuery = { _id: Id };
-    }
-
-
-    if (order) {
-      sortQuery = { order: order };
-    }
-
-    // const insertflied = await Blog.find({});
+// const insertflied = await Blog.find({});
     // console.log(insertflied.length)
 
     // for (let index = 0; index < insertflied.length; index++) {
@@ -91,20 +29,65 @@ const getBlog = async (req, res) => {
 
     // res.status(200).json(insertFields);
 
-    const totalCount = await Blog.countDocuments(sortQuery);
+    const getBlog = async (req, res) => {
+      try {
+        const page = Number(req.query.page) || 1;
+        const limit = Number(req.query.limit) || 8;
+        const category = req.query.Category || "";
+        const headline = req.query.Headline || "";
+        const id = req.query._id || "";
+        const status = req.query.Status || "";
+        const order = req.query.order || "";
+        console.log(status)
+        let skip = (page - 1) * limit;
+        let sortQuery = {};
     
-    console.log(sortQuery);
-    // const data = await Blog.find(sortQuery).skip(skip).limit(limit);
-    const data = await Blog.find(sortQuery)
-      .sort({ order: -1 })
-      .skip(skip)
-      .limit(limit);
-    res.status(200).json({ data, nbHits: totalCount });
-  } catch (error) {
-    console.log(error);
-    res.status(500).json(error);
-  }
-};
+        // Handle category filtering
+        if (category) {
+          let categoryQuery;
+          if (category == 'title1' || category == 'title2' || category == 'title3' || category == 'title4') {
+            const filterData = await Category.find({ location: category });
+            categoryQuery = { $regex: filterData[0].category, $options: "i" };
+          } else {
+            categoryQuery = { $regex: category, $options: "i" };
+          }
+    
+          if (status) {
+            const filterData = await Category.find({ location: category });
+            sortQuery = {
+              Status: status,
+              Category: categoryQuery,
+            };
+          } else {
+            sortQuery = { Category: categoryQuery };
+          }
+        }
+    
+        // Handle other filters
+        if (headline) {
+          sortQuery.Headline = headline;
+        }
+        if (id) {
+          sortQuery._id = id;
+        }
+        if (order) {
+          sortQuery.order = order;
+        }
+        console.log(sortQuery);
+    
+        const totalCount = await Blog.countDocuments(sortQuery);
+        const data = await Blog.find(sortQuery)
+          .sort({ order: -1 })
+          .skip(skip)
+          .limit(limit);
+          console.log(data);
+        res.status(200).json({ data, nbHits: totalCount });
+      } catch (error) {
+        console.log(error);
+        res.status(500).json(error);
+      }
+    };
+    
 
 const getAllBlog = async (req, res) => {
   try {

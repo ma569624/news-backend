@@ -13,7 +13,7 @@ const FounderSchema = new mongoose.Schema({
     },
    
     EmployeeImage: {
-        type: String,
+        type: Buffer, // Store image as a buffer
         required: false,
     },
     EmployeeName: {

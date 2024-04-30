@@ -24,6 +24,7 @@ const postAddress = async (req, res) => {
 
 const EditAddress = async (req, res) => {
     try {
+        console.log(req.body)
         const data = req.body;
         const itemId = req.params.id;
         const updatedItem = await Address.findByIdAndUpdate(itemId, data, {

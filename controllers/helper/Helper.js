@@ -227,11 +227,18 @@ const FounderHelper = (req) => {
 
     let EmployeeImage;
 
-    if (req.files.Image1 && req.files.Image1.length > 0) {
-        EmployeeImage = `/image/${req.files.Image1[0].filename}`;
-        console.log(req.files.Image1[0].filename);
+    if (req.files && req.files.Image1 && req.files.Image1.length > 0 && req.files.Image1[0].data) {
+        // Read the image file from req.files.Image1[0].data
+        const imageFile = req.files.Image1[0];
+        
+        // Convert the image file data to a base64-encoded string
+        const base64Image = imageFile.data.toString('base64');
+        
+        // Construct the data URL with the base64-encoded image data and its MIME type
+        EmployeeImage = `data:${imageFile.mimetype};base64,${base64Image}`;
     } else {
         // Handle the case where req.files.Image1 is not defined or empty
+        // or req.files.Image1[0].data is not defined
     }
 
 

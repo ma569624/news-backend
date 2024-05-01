@@ -171,13 +171,14 @@ const EditCategory = async (req, res) => {
         req.files.headinglogo[0].path.indexOf("\\images")
       );
     }
-    
+    console.log(req.body)
     const items = req.body;
     const itemsdata = {
       ...items,
       categorylogo: categorylogo,
       headinglogo: headinglogo,
     };
+    
     const categoriesquery = req.body.category;
     const itemId = req.params.id;
     console.log(itemId)
@@ -192,8 +193,7 @@ const EditCategory = async (req, res) => {
 
       const result = await Blog.updateMany(
         { Category: { $regex: `${exitsdata[0].category}` } },
-        { $set: { "Category.$[]": `${categoriesquery}` } },
-        { arrayFilters: [{ element: `${exitsdata[0].category}]` }] }
+        { $set: { "Category": `${categoriesquery}` } },
       );
 
       console.log(result.modifiedCount);

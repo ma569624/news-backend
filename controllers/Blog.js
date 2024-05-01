@@ -209,6 +209,7 @@ const postBlog = async (req, res) => {
 
 const EditBlog = async (req, res) => {
   try {
+    console.log(req.body);
     const data = BlogHelper(req);
     console.log(data);
     const itemId = req.params.id;

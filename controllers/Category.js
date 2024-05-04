@@ -94,17 +94,18 @@ const postCategory = async (req, res) => {
     // console.log(req.files);
     let categorylogo;
     let headinglogo;
+
     if (req.files.categorylogo) {
-      categorylogo = req.files.categorylogo[0].path.substring(
-        req.files.categorylogo[0].path.indexOf("\\images")
-      );
+      categorylogo = req.files.categorylogo[0].path.replace(/\\/g, '/');
+      categorylogo = categorylogo.substring(categorylogo.indexOf("/images"));
     }
+    
     if (req.files.headinglogo) {
-      headinglogo = req.files.headinglogo[0].path.substring(
-        req.files.headinglogo[0].path.indexOf("\\images")
-      );
+      headinglogo = req.files.headinglogo[0].path.replace(/\\/g, '/');
+      headinglogo = headinglogo.substring(headinglogo.indexOf("/images"));
     }
-   
+    console.log(categorylogo)
+    console.log(headinglogo)
     const items = req.body;
     let totaldoc = await Category.countDocuments({});
     const itemsdata = {
@@ -161,17 +162,17 @@ const EditCategory = async (req, res) => {
     let headinglogo;
 
     if (req.files.categorylogo) {
-      categorylogo = req.files.categorylogo[0].path.substring(
-        req.files.categorylogo[0].path.indexOf("\\images")
-      );
+      categorylogo = req.files.categorylogo[0].path.replace(/\\/g, '/');
+      categorylogo = categorylogo.substring(categorylogo.indexOf("/images"));
     }
     
     if (req.files.headinglogo) {
-      headinglogo = req.files.headinglogo[0].path.substring(
-        req.files.headinglogo[0].path.indexOf("\\images")
-      );
+      headinglogo = req.files.headinglogo[0].path.replace(/\\/g, '/');
+      headinglogo = headinglogo.substring(headinglogo.indexOf("/images"));
     }
-    
+
+    console.log(categorylogo)
+    console.log(headinglogo)
     console.log(req.body)
     const items = req.body;
     const itemsdata = {

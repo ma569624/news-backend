@@ -52,6 +52,7 @@ app.use("/api", Loginrouter);
 app.use("/api", YoutubeRouter);
 
 app.use("/image", express.static("upload/images"));
+app.use("/images", express.static("upload/images"));
 
 
 const start = async () => {

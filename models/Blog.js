@@ -10,11 +10,6 @@ const BlogSchema = new mongoose.Schema({
         required: false,
     },
 
-    // StateName: {
-    //     type: [String],
-    //     required: false,
-    // },
-
     ReporterImage: {
         type: String,
         required: false,

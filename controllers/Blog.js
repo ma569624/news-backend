@@ -1,111 +1,120 @@
 const Blog = require("../models/Blog");
 const { BlogHelper } = require("./helper/Helper");
-const { HomeDisplay, Rajiyo } = require("../models/HomeDisplay");
 const Category = require("../models/Category");
 
 // const insertflied = await Blog.find({});
-    // console.log(insertflied.length)
+// console.log(insertflied.length)
 
-    // for (let index = 0; index < insertflied.length; index++) {
-    //   // const element = array[index];
-    //   const data = await Blog.findByIdAndUpdate(insertflied[index]._id, {order: index}, {
-    //     new: true, // return the modified document rather than the original
-    //   });
-    // }
+// for (let index = 0; index < insertflied.length; index++) {
+//   // const element = array[index];
+//   const data = await Blog.findByIdAndUpdate(insertflied[index]._id, {order: index}, {
+//     new: true, // return the modified document rather than the original
+//   });
+// }
 
-    //for update flied
-    //     const insertFields = await Blog.find({ Category: 'TopKhabare' });
+//for update flied
+//     const insertFields = await Blog.find({ Category: 'TopKhabare' });
 
-    // for (let index = 0; index < insertFields.length; index++) {
-    //   const updatedData = await Blog.findByIdAndUpdate(
-    //     insertFields[index]._id,
-    //     { $set: { Category: ['प्रमुख समाचार'] } }, // Replace all existing values with ['प्रमुख समाचार']
-    //     {
-    //       new: true, // Return the modified document rather than the original
-    //     }
-    //   );
-    //   console.log(updatedData); // Log the updated document
-    // }
+// for (let index = 0; index < insertFields.length; index++) {
+//   const updatedData = await Blog.findByIdAndUpdate(
+//     insertFields[index]._id,
+//     { $set: { Category: ['प्रमुख समाचार'] } }, // Replace all existing values with ['प्रमुख समाचार']
+//     {
+//       new: true, // Return the modified document rather than the original
+//     }
+//   );
+//   console.log(updatedData); // Log the updated document
+// }
 
-    // res.status(200).json(insertFields);
+// res.status(200).json(insertFields);
 
-    const getBlog = async (req, res) => {
-      try {
-        const page = Number(req.query.page) || 1;
-        const limit = Number(req.query.limit) || 8;
-        const category = req.query.Category || "";
-        const headline = req.query.Headline || "";
-        const id = req.query._id || "";
-        const status = req.query.Status || "";
-        const order = req.query.order || "";
-        console.log(status)
-        let skip = (page - 1) * limit;
-        let sortQuery = {};
-    
-        // Handle category filtering
-        if (category) {
-          let categoryQuery;
-          if (category == 'title1' || category == 'title2' || category == 'title3' || category == 'title4') {
-            const filterData = await Category.find({ location: category });
-            categoryQuery = { $regex: filterData[0].category, $options: "i" };
-          } else {
-            categoryQuery = { $regex: category, $options: "i" };
-          }
-    
-          if (status) {
-            const filterData = await Category.find({ location: category });
-            sortQuery = {
-              Status: status,
-              Category: categoryQuery,
-            };
-          } else {
-            sortQuery = { Category: categoryQuery };
-          }
-        }
-    
-        // Handle other filters
-        if (headline) {
-          sortQuery.Headline = headline;
-        }
-        if (id) {
-          sortQuery._id = id;
-        }
-        if (order) {
-          sortQuery.order = order;
-        }
-        console.log(sortQuery);
-    
-        const totalCount = await Blog.countDocuments(sortQuery);
-        const data = await Blog.find(sortQuery)
-          .sort({ order: -1 })
-          .skip(skip)
-          .limit(limit);
-          console.log(data);
-        res.status(200).json({ data, nbHits: totalCount });
-      } catch (error) {
-        console.log(error);
-        res.status(500).json(error);
+const getBlog = async (req, res) => {
+  try {
+    const page = Number(req.query.page) || 1;
+    const limit = Number(req.query.limit) || 8;
+    const category = req.query.Category || "";
+    const headline = req.query.Headline || "";
+    const id = req.query._id || "";
+    const status = req.query.Status || "";
+    const order = req.query.order || "";
+    console.log(status);
+    let skip = (page - 1) * limit;
+    let sortQuery = {};
+
+    // Handle category filtering
+    if (category) {
+      let categoryQuery;
+      if (
+        category == "title1" ||
+        category == "title2" ||
+        category == "title3" ||
+        category == "title4"
+      ) {
+        const filterData = await Category.find({ location: category });
+        categoryQuery = { $regex: filterData[0].category, $options: "i" };
+      } else {
+        categoryQuery = { $regex: category, $options: "i" };
       }
-    };
-    
+
+      if (status) {
+        const filterData = await Category.find({ location: category });
+        sortQuery = {
+          Status: status,
+          Category: categoryQuery,
+        };
+      } else {
+        sortQuery = { Category: categoryQuery };
+      }
+    }
+
+    // Handle other filters
+    if (headline) {
+      sortQuery.Headline = headline;
+    }
+    if (id) {
+      sortQuery._id = id;
+    }
+    if (order) {
+      sortQuery.order = order;
+    }
+    console.log(sortQuery);
+
+    const totalCount = await Blog.countDocuments(sortQuery);
+    const data = await Blog.find(sortQuery)
+      .sort({ order: -1 })
+      .skip(skip)
+      .limit(limit);
+    console.log(data);
+    res.status(200).json({ data, nbHits: totalCount });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json(error);
+  }
+};
 
 const getAllBlog = async (req, res) => {
   try {
-    const page = 1;
+    const page = req.query.page;
     const sortQuery = req.query.name;
-    const limit = 12;
+    const limit = 1;
 
     let skip = (page - 1) * limit;
+    // const catpage = 1
+    // const catskip = (catpage - 1) * limit;
 
     // Category
     const categorydata = await Category.find({
       location: { $regex: sortQuery, $options: "i" },
       Status: "active",
-    }).sort({ order: 1 });
+    })
+      .sort({ order: 1 })
+      .limit(limit)
+      .skip(skip);
 
-    // const block = await HomeDisplay.find({ Status: "active" }).sort({order: 1});
-
-    // const rajiya = await Rajiyo.find({ Status: "active" });
+    const totalCount = await Category.countDocuments({
+      location: { $regex: sortQuery, $options: "i" },
+      Status: "active",
+    });
 
     const result = [];
 
@@ -114,59 +123,76 @@ const getAllBlog = async (req, res) => {
         Category: { $regex: item.category, $options: "i" },
       })
         .sort({ order: -1 })
-        .limit(limit)
-        .skip(skip);
+        .limit(12);
       const resultItem = {
         section: item,
         data: data,
       };
       result.push(resultItem);
     }
-    console.log("HIT");
+    console.log(page);
 
-    // if (name == "rajiya") {
-    //   for (const item of rajiya) {
-    //     const data = await Blog.find({
-    //       Category: { $regex: item.StateName, $options: "i" },
-    //     })
-    //       .sort({ order: -1 })
-    //       .limit(limit)
-    //       .skip(skip);
-    //       //this is intial
-    //     // data.reverse();
-    //     //   console.log(data);
-    //     // const resultItem = {};
-    //     // resultItem[item] = data;
-    //     const resultItem = {
-    //       section: item,
-    //       data: data,
-    //     };
+    res.status(200).json({ data: result, nbHits: totalCount });
+  } catch (error) {
+    res.status(500).json(error);
+  }
+};
 
-    //     result.push(resultItem);
-    //   }
-    // }
-    // if (name == "block") {
-    //   console.log("hi");
-    //   for (const item of block) {
-    //     const data = await Blog.find({
-    //       Category: { $regex: item.SectionName, $options: "i" },
-    //     })
-    //       .sort({ order: -1 })
-    //       .limit(limit)
-    //       .skip(skip);
-    //     // data.reverse();
-    //     //   console.log(data);
-    //     // const resultItem = {};
-    //     // resultItem[item] = data;
-    //     const resultItem = {
-    //       section: item,
-    //       data: data,
-    //     };
-    //     result.push(resultItem);
-    //   }
-    // }
+const getheaderblog = async (req, res) => {
+  try {
+    const page = req.query.page;
+    const sortQuery = req.query.name;
+    const limit = 10;
 
-    res.status(200).json({ data: result, nbHits: result.length });
+    let skip = (page - 1) * limit;
+    // const catpage = 1
+    // const catskip = (catpage - 1) * limit;
+    let categorydata;
+    if(sortQuery == 'block'){
+      categorydata = await Category.find({
+        location: { $regex: sortQuery, $options: "i" },
+        Status: "active",
+        isHeader: true,
+      })
+        .sort({ order: 1 })
+        .limit(limit)
+        .skip(skip);
+    }
+    else{
+      categorydata = await Category.find({
+        location: { $regex: sortQuery, $options: "i" },
+        Status: "active",
+      })
+        .sort({ order: 1 })
+        .limit(limit)
+        .skip(skip);
+    }
+
+    // Category
+    
+
+    const totalCount = await Category.countDocuments({
+      location: { $regex: sortQuery, $options: "i" },
+      Status: "active",
+    });
+
+    const result = [];
+
+    for (const item of categorydata) {
+      const data = await Blog.find({
+        Category: { $regex: item.category, $options: "i" },
+      })
+        .sort({ order: -1 })
+        .limit(5);
+      const resultItem = {
+        section: item,
+        data: data,
+      };
+      result.push(resultItem);
+    }
+    console.log(page);
+
+    res.status(200).json({ data: result, nbHits: totalCount });
   } catch (error) {
     res.status(500).json(error);
   }
@@ -322,6 +348,7 @@ const MultiDeleteBlog = async (req, res) => {
 };
 
 module.exports = {
+  getheaderblog,
   getBlog,
   postBlog,
   EditBlog,

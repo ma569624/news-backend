@@ -1,5 +1,5 @@
 const Category = require("../models/Category");
-const { HomeDisplay } = require("../models/HomeDisplay");
+// const { HomeDisplay } = require("../models/HomeDisplay");
 const Blog = require("../models/Blog");
 
 const getCategory = async (req, res) => {

@@ -25,7 +25,6 @@ const postFounder = async (req, res) => {
     };
     const data = new Founder(itemsdata);
     const result = await data.save();
-    console.log(result);
     res.status(200).json(result);
   } catch (error) {
     res.status(200).json({ message: "error created successfully", error });

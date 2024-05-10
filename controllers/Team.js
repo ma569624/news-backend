@@ -26,7 +26,6 @@ const postTeam = async (req, res) => {
     };
     const data = new Team(itemsdata);
     const result = await data.save();
-    console.log(result);
     res.status(200).json(result);
     // res.send(items)
   } catch (error) {

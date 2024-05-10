@@ -7,7 +7,6 @@ const getWebsiteHit = async (req, res) => {
     // console.log(add)
 
     const mydata = await WebsiteHit.find({});
-    console.log(mydata);
     await WebsiteHit.updateOne({}, { $set: { hits: mydata[0].hits + 1 } });
     return res.status(200).json(mydata);
   } catch (error) {
@@ -25,7 +24,6 @@ const getSubscribers = async (req, res) => {
 };
 
 const postSubscribers = async (req, res) => {
-  console.log(req.body);
 
   let profile;
   if (req.files && req.files.profile) {
@@ -43,7 +41,6 @@ const postSubscribers = async (req, res) => {
     };
     const data = new Subscribers(itemdata);
     const result = await data.save();
-    console.log(result);
     res.status(200).json(result);
   } catch (error) {
     res.status(500).json({ message: "Error inserting document" });
@@ -51,19 +48,13 @@ const postSubscribers = async (req, res) => {
 };
 
 const editSubscribers = async (req, res) => {
-  console.log(req.body);
 
-  // let profile;
-  // if (req.files && req.files.profile) {
-  //   profile = req.files.profile[0].path.replace(/\\/g, "/");
-  //   profile = profile.substring(profile.indexOf("/images"));
-  // }
+  
 
   try {
     const userdetails = req.body;
     const itemdata = {
       ...userdetails,
-      // profile: profile,
     };
 
 

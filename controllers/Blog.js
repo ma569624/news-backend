@@ -12,13 +12,11 @@ const BlogHelper = (req) => {
 
   if (req.files.Video && req.files.Video.length > 0) {
     Video = `/image/${req.files.Video[0].filename}`;
-    console.log(req.files.Video[0].filename);
   } else {
     // Handle the case where req.files.Image1 is not defined or empty
   }
   if (req.files.Audio && req.files.Audio.length > 0) {
     Audio = `/image/${req.files.Audio[0].filename}`;
-    console.log(req.files.Audio[0].filename);
   } else {
     // Handle the case where req.files.Image1 is not defined or empty
   }
@@ -91,7 +89,6 @@ const BlogHelper = (req) => {
 const getblogsearch = async (req, res) => {
   try {
     const id = req.params.id;
-    console.log(id);
     const page = Number(req.query.page) || 1;
     const limit = Number(req.query.limit) || 10;
     let skip = (page - 1) * limit;
@@ -102,11 +99,10 @@ const getblogsearch = async (req, res) => {
       .sort({ order: -1 })
       .skip(skip)
       .limit(limit);
-    console.log(data);
     res.status(200).json({ data, totalCount: totalCount });
   } catch (error) {
     res.status(500).json(error);
-    console.log(error);
+    console.error(error);
   }
 };
 const getBlog = async (req, res) => {
@@ -118,7 +114,6 @@ const getBlog = async (req, res) => {
     const id = req.query._id || "";
     const status = req.query.Status || "";
     const order = req.query.order || "";
-    console.log(status);
     let skip = (page - 1) * limit;
     let sortQuery = {};
 
@@ -158,7 +153,6 @@ const getBlog = async (req, res) => {
     if (order) {
       sortQuery.order = order;
     }
-    console.log(sortQuery);
 
     const totalCount = await Blog.countDocuments(sortQuery);
     const totalPages = Math.ceil(totalCount / limit);
@@ -166,10 +160,9 @@ const getBlog = async (req, res) => {
       .sort({ order: -1 })
       .skip(skip)
       .limit(limit);
-    console.log(data);
     res.status(200).json({ data, nbHits: totalCount, totalPages: totalPages });
   } catch (error) {
-    console.log(error);
+    console.error(error);
     res.status(500).json(error);
   }
 };
@@ -212,7 +205,6 @@ const getAllBlog = async (req, res) => {
       };
       result.push(resultItem);
     }
-    console.log(page);
 
     res.status(200).json({ data: result, nbHits: totalCount });
   } catch (error) {
@@ -270,7 +262,6 @@ const getheaderblog = async (req, res) => {
       };
       result.push(resultItem);
     }
-    console.log(page);
 
     res.status(200).json({ data: result, nbHits: totalCount });
   } catch (error) {
@@ -289,12 +280,10 @@ const postBlog = async (req, res) => {
 
     const items = req.body;
     delete items.Category;
-    console.log(items);
     let createdBlogs = [];
     const totaldoc = await Blog.countDocuments({});
 
     for (let i = 0; i < setarray.length; i++) {
-      console.log(setarray[i]);
       const itemsdata = {
         ...items,
         Image: Image,
@@ -304,22 +293,19 @@ const postBlog = async (req, res) => {
       const dataschema = new Blog(itemsdata);
       createdBlogs.push(dataschema);
     }
-    console.log(createdBlogs);
 
     const result = await Blog.insertMany(createdBlogs);
-    console.log(result);
     res
       .status(200)
       .json({ message: "Blogs created successfully", blogs: result });
   } catch (error) {
-    console.log(error);
+    console.error(error);
     res.status(500).json({ message: "Error creating blogs", error });
   }
 };
 
 const EditBlog = async (req, res) => {
   try {
-    console.log(req.body);
     const item = req.body;
     let Image, ReporterImage;
     if (req.files.Image1) {
@@ -330,7 +316,6 @@ const EditBlog = async (req, res) => {
       Image = req.files.Image2[0].path.replace(/\\/g, "/");
       Image = Image.substring(Image.indexOf("/images"));
     }
-    console.log(Image);
 
     const data = {
       ReporterImage: ReporterImage,
@@ -341,7 +326,6 @@ const EditBlog = async (req, res) => {
     updatedItem = await Blog.findByIdAndUpdate(itemId, data, {
       new: true, // return the modified document rather than the original
     });
-    console.log(updatedItem);
     res.status(200).json(updatedItem);
   } catch (error) {
     console.error(error);
@@ -353,7 +337,6 @@ const DeleteBlog = async (req, res) => {
   const splitarray = req.params.id.split("&");
   const Id = splitarray[0];
   const Category = splitarray[1];
-  console.log(splitarray);
 
   try {
     const result = await Blog.deleteOne({ _id: Id });
@@ -363,7 +346,6 @@ const DeleteBlog = async (req, res) => {
     }
 
     const insertflied = await Blog.find({});
-    console.log(insertflied.length);
 
     for (let index = 0; index < insertflied.length; index++) {
       // const element = array[index];
@@ -386,7 +368,6 @@ const DeleteBlog = async (req, res) => {
 
 const MultiEditBlog = async (req, res) => {
   const { ids, status } = req.body;
-  console.log(req.body);
   try {
     // Update the status of multiple items using updateMany
     const result = await Blog.updateMany(
@@ -409,7 +390,6 @@ const MultiEditBlog = async (req, res) => {
 
 const MultiDeleteBlog = async (req, res) => {
   const { ids } = req.body;
-  console.log(ids);
   try {
     // Use a loop to iterate through each ID and delete the corresponding item
     for (const id of ids) {
@@ -424,7 +404,6 @@ const MultiDeleteBlog = async (req, res) => {
     }
 
     const insertflied = await Blog.find({});
-    console.log(insertflied.length);
 
     for (let index = 0; index < insertflied.length; index++) {
       // const element = array[index];

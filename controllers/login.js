@@ -11,7 +11,6 @@ const getloginlogs = async (req, res) => {
 };
 
 const postlogin = async (req, res) => {
-  console.log("hits");
   const { User_name, password } = req.body;
 
   try {
@@ -30,25 +29,19 @@ const postlogin = async (req, res) => {
       type: type === undefined ? "user" : type,
     };
 
-    console.warn(sendinfo);
     if (!block) {
       if (!user) {
-        console.log("User not found");
         return res.status(404).json({ error: "User not found" });
       }
 
       const isMatch = await (password === user.password);
 
-      console.log(isMatch);
       if (!isMatch) {
-        console.log("password not matched");
         return res.status(401).json({ error: "password invalid" });
       }
 
       const ip = req.socket.remoteAddress;
 
-      // Log the IP address
-      console.log("Client IP:", ip);
       const items = {
         ...req.body,
         ipaddres: ip,

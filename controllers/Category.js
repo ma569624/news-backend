@@ -32,7 +32,6 @@ const getCategory = async (req, res) => {
     const Query = req.query.location;
     const category = req.query.category || "";
     const Id = req.query.id;
-    console.log(Id);
     let skip = (page - 1) * limit;
     // console.log(req.query);
     let sortQuery;
@@ -79,11 +78,10 @@ const getCategory = async (req, res) => {
       // const totalCount = await Category.countDocuments(sortQuery);
       const data = await Category.find(sortQuery).sort({ order: 1 });
       // console.log(data);
-      console.log("Data transferred successfully");
       res.status(200).json(data);
     }
   } catch (error) {
-    console.log(error);
+    console.error(error);
     res.status(500).json(error);
   }
 };
@@ -115,7 +113,7 @@ const postCategory = async (req, res) => {
     const result = await data.save();
     res.status(200).json(result);
   } catch (error) {
-    console.log(error);
+    console.error(error);
     res.status(500).json({ message: "error created successfully", error });
   }
 };
@@ -136,9 +134,6 @@ const EditCategory = async (req, res) => {
       headinglogo = headinglogo.substring(headinglogo.indexOf("/images"));
     }
 
-    console.log(categorylogo)
-    console.log(headinglogo)
-    console.log(req.body)
     const items = req.body;
     const itemsdata = {
       ...items,
@@ -148,22 +143,17 @@ const EditCategory = async (req, res) => {
     
     const categoriesquery = req.body.category;
     const itemId = req.params.id;
-    console.log(itemId)
     const exitsdata = await Category.find({_id: itemId});
-    console.log(exitsdata[0].category)
     const updatedItem = await Category.findByIdAndUpdate(itemId, itemsdata, {
       new: true, // return the modified document rather than the original
     });
     if (categoriesquery) {
-      console.log("change categorie");
-      
 
       const result = await Blog.updateMany(
         { Category: { $regex: `${exitsdata[0].category}` } },
         { $set: { "Category": `${categoriesquery}` } },
       );
 
-      console.log(result.modifiedCount);
     }
 
 
@@ -209,8 +199,6 @@ const DeleteCategory = async (req, res) => {
 
 const MultiEditCategory = async (req, res) => {
   const { ids, status } = req.body;
-  console.log(req.body);
-  console.log('dfnbdfj')
 
   try {
     // Update the status of multiple items using updateMany
@@ -233,7 +221,6 @@ const MultiEditCategory = async (req, res) => {
 
 const MultiDeleteCategory = async (req, res) => {
   const { ids } = req.body;
-  console.log(ids);
   try {
     // Use a loop to iterate through each ID and delete the corresponding item
     for (const id of ids) {

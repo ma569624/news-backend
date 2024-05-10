@@ -22,9 +22,8 @@ async function sendOTPviaEmail(email, otp) {
       text: `Your OTP is: ${otp}`
     });
   
-    console.log('Message sent: %s', info.messageId);
   } catch (error) {
-    console.log(error)
+    console.error(error)
   }
 }
 
@@ -48,7 +47,6 @@ const forgetPassword = async (req, res) => {
   // Example usage:
   const otp = generateOTP();
   sendOTPviaEmail('manish.frontenddeveloper@gmail.com',otp)
-  console.log("Generated OTP:", otp);
   return res.status(200).json(otp);
  } catch (error) {
   return res.status(500).json({ message: "Error occurred", error });
@@ -67,10 +65,8 @@ const postSign = async (req, res) => {
       ...userdetails,
       profile: profile,
     };
-    console.log(req.body);
     const data = new signup(itemdata);
     const result = await data.save();
-    console.log(result);
     res.status(200).json(result);
   } catch (error) {
     res.status(500).json({ message: "Error inserting document" });
@@ -90,9 +86,6 @@ const edituser = async (req, res) => {
       ...userdetails,
       profile: profile,
     };
-    
- console.warn(itemdata)
-
 
     const itemId = req.params.id;
     const updatedItem = await signup.findByIdAndUpdate(itemId, itemdata, {

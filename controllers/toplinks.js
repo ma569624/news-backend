@@ -34,7 +34,6 @@ const Edittoplinks = async (req, res) => {
     const updatedItem = await toplinks.findByIdAndUpdate(itemId, itemsdata, {
       new: true, // return the modified document rather than the original
     });
-    console.log(updatedItem);
     res.json(updatedItem);
   } catch (error) {
     console.error(error);

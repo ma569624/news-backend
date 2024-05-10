@@ -65,10 +65,8 @@ const getTajaSamachar = async (req, res) => {
 
 const postTajaSamachar = async (req, res) => {
   try {
-    console.log(req.body);
     const data = new TajaSamachar(req.body);
     const result = await data.save();
-    console.log(result);
     res.status(200).json(result);
     // res.send(items)
   } catch (error) {
@@ -79,7 +77,6 @@ const postTajaSamachar = async (req, res) => {
 const EditTajaSamachar = async (req, res) => {
   try {
     const data = req.body;
-    console.log(req.body);
     const itemId = req.params.id;
     const updatedItem = await TajaSamachar.findByIdAndUpdate(itemId, data, {
       new: true, // return the modified document rather than the original

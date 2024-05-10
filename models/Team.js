@@ -8,9 +8,8 @@ const TeamSchema = new mongoose.Schema({
         required: false,
     },
     Status: {
-        type: String,
-        enum: ['active', 'inactive', 'pending'], // Define allowed values
-        default: 'active',
+       type: Boolean,
+       default: true
     },
     EmployeeImage: {
         type: String,

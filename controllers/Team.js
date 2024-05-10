@@ -1,5 +1,4 @@
 const Team = require("../models/Team");
-const { TeamHelper } = require("./helper/Helper");
 
 const getTeam = async (req, res) => {
   const Id = req.query._id;
@@ -13,10 +12,19 @@ const getTeam = async (req, res) => {
 
 const postTeam = async (req, res) => {
   try {
-    console.log(req.body);
-    const items = TeamHelper(req);
-    console.log(items);
-    const data = new Team(items);
+    let EmployeeImage;
+  
+    if (req.files.Image1) {
+      EmployeeImage = req.files.Image1[0].path.replace(/\\/g, '/');
+      EmployeeImage = EmployeeImage.substring(EmployeeImage.indexOf("/images"));
+    }
+    const items = req.body;
+    
+    const itemsdata = {
+      ...items,
+      EmployeeImage: EmployeeImage,
+    };
+    const data = new Team(itemsdata);
     const result = await data.save();
     console.log(result);
     res.status(200).json(result);
@@ -28,12 +36,24 @@ const postTeam = async (req, res) => {
 
 const EditTeam = async (req, res) => {
   try {
-    const data = TeamHelper(req);
+    let EmployeeImage;
+  
+    if (req.files.Image1) {
+      EmployeeImage = req.files.Image1[0].path.replace(/\\/g, '/');
+      EmployeeImage = EmployeeImage.substring(EmployeeImage.indexOf("/images"));
+    
+    }
+    const items = req.body;
+    const itemsdata = {
+      ...items,
+      EmployeeImage: EmployeeImage,
+    };
+    
     const itemId = req.params.id;
-    const updatedItem = await Team.findByIdAndUpdate(itemId, data, {
+    const updatedItem = await Team.findByIdAndUpdate(itemId, itemsdata, {
       new: true, // return the modified document rather than the original
     });
-    res.json(updatedItem);
+    res.status(200).json(updatedItem);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Internal Server Error" });

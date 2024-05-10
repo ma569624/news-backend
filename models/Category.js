@@ -39,9 +39,8 @@ const CategorySchema = new mongoose.Schema({
         require: false,
     },
     Status: {
-        type: String,
-        enum: ['active', 'inactive', 'pending'], // Define allowed values
-        default: 'active',
+        type: Boolean,
+        default: false,
     },
 })
 

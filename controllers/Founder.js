@@ -1,5 +1,4 @@
 const Founder = require("../models/Founder");
-const { FounderHelper } = require("./helper/Helper");
 
 const getFounder = async (req, res) => {
   try {
@@ -13,14 +12,21 @@ const getFounder = async (req, res) => {
 const postFounder = async (req, res) => {
   try {
     
-    console.log(req.body);
-    const items = FounderHelper(req);
-    console.log(items);
-    const data = new Founder(items);
+    let EmployeeImage;
+  
+    if (req.files.Image1) {
+      EmployeeImage = req.files.Image1[0].path.replace(/\\/g, '/');
+      EmployeeImage = EmployeeImage.substring(EmployeeImage.indexOf("/images"));
+    }
+    const items = req.body;
+    const itemsdata = {
+      ...items,
+      EmployeeImage: EmployeeImage,
+    };
+    const data = new Founder(itemsdata);
     const result = await data.save();
     console.log(result);
     res.status(200).json(result);
-    // res.send(items)
   } catch (error) {
     res.status(200).json({ message: "error created successfully", error });
   }
@@ -28,10 +34,20 @@ const postFounder = async (req, res) => {
 
 const EditFounder = async (req, res) => {
   try {
-    console.log(req.files);
-    const data = FounderHelper(req);
+    let EmployeeImage;
+  
+    if (req.files.Image1) {
+      EmployeeImage = req.files.Image1[0].path.replace(/\\/g, '/');
+      EmployeeImage = EmployeeImage.substring(EmployeeImage.indexOf("/images"));
+    }
+    const items = req.body;
+    const itemsdata = {
+      ...items,
+      categorylogo: categorylogo,
+      headinglogo: headinglogo,
+    };
     const itemId = req.params.id;
-    const updatedItem = await Founder.findByIdAndUpdate(itemId, data, {
+    const updatedItem = await Founder.findByIdAndUpdate(itemId, itemsdata, {
       new: true, // return the modified document rather than the original
     });
     res.json(updatedItem);

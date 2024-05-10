@@ -90,8 +90,6 @@ const getCategory = async (req, res) => {
 
 const postCategory = async (req, res) => {
   try {
-    // console.log(req.body);
-    // console.log(req.files);
     let categorylogo;
     let headinglogo;
 
@@ -104,8 +102,7 @@ const postCategory = async (req, res) => {
       headinglogo = req.files.headinglogo[0].path.replace(/\\/g, '/');
       headinglogo = headinglogo.substring(headinglogo.indexOf("/images"));
     }
-    console.log(categorylogo)
-    console.log(headinglogo)
+    
     const items = req.body;
     let totaldoc = await Category.countDocuments({});
     const itemsdata = {
@@ -122,39 +119,7 @@ const postCategory = async (req, res) => {
     res.status(500).json({ message: "error created successfully", error });
   }
 };
-const EditHomeDisplay = async (req, res) => {
-  console.log(req.body.SectionName);
-  const categoriesquery = req.body.SectionName;
-  try {
-    const data = blockkHelper(req);
-    console.log(data);
-    const itemId = req.params.id;
-    const exitsdata = await HomeDisplay.findById(itemId);
-    const updatedItem = await HomeDisplay.findByIdAndUpdate(itemId, data, {
-      new: true, // return the modified document rather than the original
-    });
 
-    if (categoriesquery) {
-      console.log("change categorie");
-      const docs = await Blog.find({
-        Category: { $regex: `${exitsdata.SectionName}` },
-      });
-
-      const result = await Blog.updateMany(
-        { Category: { $regex: `${exitsdata.SectionName}` } },
-        { $set: { "Category.$[]": `${categoriesquery}` } },
-        { arrayFilters: [{ element: `${exitsdata.SectionName}]` }] }
-      );
-
-      console.log(`${result.nModified} documents updated.`);
-    }
-
-    res.json(updatedItem);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Internal Server Error" });
-  }
-};
 
 const EditCategory = async (req, res) => {
   try {

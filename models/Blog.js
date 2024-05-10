@@ -32,9 +32,8 @@ const BlogSchema = new mongoose.Schema({
     },
     
     Status: {
-        type: String,
-        enum: ['active', 'inactive', 'pending'], // Define allowed values
-        default: 'active',
+        type: Boolean,
+        default: false,
     },
     Heading: {
         type: String,

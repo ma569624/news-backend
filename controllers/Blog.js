@@ -1,6 +1,66 @@
 const Blog = require("../models/Blog");
-const { BlogHelper } = require("./helper/Helper");
 const Category = require("../models/Category");
+
+const BlogHelper = (req) => {
+  let Image, Video, Audio;
+
+  if (req.files.Image2 && req.files.Image2.length > 0) {
+    Image = `/image/${req.files.Image2[0].filename}`;
+  } else {
+    // Handle the case where req.files.Image2 is not defined or empty
+  }
+
+  if (req.files.Video && req.files.Video.length > 0) {
+    Video = `/image/${req.files.Video[0].filename}`;
+    console.log(req.files.Video[0].filename);
+  } else {
+    // Handle the case where req.files.Image1 is not defined or empty
+  }
+  if (req.files.Audio && req.files.Audio.length > 0) {
+    Audio = `/image/${req.files.Audio[0].filename}`;
+    console.log(req.files.Audio[0].filename);
+  } else {
+    // Handle the case where req.files.Image1 is not defined or empty
+  }
+
+  const Category = req.body.Category
+    ? req.body.Category.replace(/[\[\]"']/g, "").split(/,(?!\s)/)
+    : [];
+  const Status = req.body.Status;
+  const ReporterImage = req.body.ReporterProfile;
+  const ReporterName = req.body.ReporterName;
+  const Heading = req.body.Heading;
+
+  const Matter = req.body.Matter;
+  const DatePlace = req.body.DatePlace;
+  const CreationDate = req.body.CreationDate;
+  const Capton = req.body.Capton;
+  const Subheading = req.body.Subheading;
+  const Designation = req.body.Designation;
+  const Headline = req.body.Headline;
+
+  const data = {
+    Headline,
+    CreationDate,
+    Status,
+    ReporterImage,
+    ReporterName,
+    Heading,
+    Matter,
+    DatePlace,
+    Capton,
+    Subheading,
+    Designation,
+    Image,
+    Video,
+    Audio,
+  };
+  if (Category.length > 0) {
+    data.Category = Category;
+  }
+
+  return data;
+};
 
 // const insertflied = await Blog.find({});
 // console.log(insertflied.length)
@@ -28,6 +88,27 @@ const Category = require("../models/Category");
 
 // res.status(200).json(insertFields);
 
+const getblogsearch = async (req, res) => {
+  try {
+    const id = req.params.id;
+    console.log(id);
+    const page = Number(req.query.page) || 1;
+    const limit = Number(req.query.limit) || 10;
+    let skip = (page - 1) * limit;
+    const totalCount = await Blog.countDocuments({
+      Heading: { $regex: new RegExp(id, "i") },
+    });
+    const data = await Blog.find({ Heading: { $regex: new RegExp(id, "i")}}, { Heading: 1, Image: 1, Category: 1, order: 1 })
+      .sort({ order: -1 })
+      .skip(skip)
+      .limit(limit);
+    console.log(data);
+    res.status(200).json({ data, totalCount: totalCount });
+  } catch (error) {
+    res.status(500).json(error);
+    console.log(error);
+  }
+};
 const getBlog = async (req, res) => {
   try {
     const page = Number(req.query.page) || 1;
@@ -80,12 +161,13 @@ const getBlog = async (req, res) => {
     console.log(sortQuery);
 
     const totalCount = await Blog.countDocuments(sortQuery);
+    const totalPages = Math.ceil(totalCount / limit);
     const data = await Blog.find(sortQuery)
       .sort({ order: -1 })
       .skip(skip)
       .limit(limit);
     console.log(data);
-    res.status(200).json({ data, nbHits: totalCount });
+    res.status(200).json({ data, nbHits: totalCount, totalPages: totalPages });
   } catch (error) {
     console.log(error);
     res.status(500).json(error);
@@ -105,7 +187,7 @@ const getAllBlog = async (req, res) => {
     // Category
     const categorydata = await Category.find({
       location: { $regex: sortQuery, $options: "i" },
-      Status: "active",
+      Status: true,
     })
       .sort({ order: 1 })
       .limit(limit)
@@ -113,7 +195,7 @@ const getAllBlog = async (req, res) => {
 
     const totalCount = await Category.countDocuments({
       location: { $regex: sortQuery, $options: "i" },
-      Status: "active",
+      Status: true,
     });
 
     const result = [];
@@ -148,20 +230,19 @@ const getheaderblog = async (req, res) => {
     // const catpage = 1
     // const catskip = (catpage - 1) * limit;
     let categorydata;
-    if(sortQuery == 'block'){
+    if (sortQuery == "block") {
       categorydata = await Category.find({
         location: { $regex: sortQuery, $options: "i" },
-        Status: "active",
+        Status: true,
         isHeader: true,
       })
         .sort({ order: 1 })
         .limit(limit)
         .skip(skip);
-    }
-    else{
+    } else {
       categorydata = await Category.find({
         location: { $regex: sortQuery, $options: "i" },
-        Status: "active",
+        Status: true,
       })
         .sort({ order: 1 })
         .limit(limit)
@@ -169,11 +250,10 @@ const getheaderblog = async (req, res) => {
     }
 
     // Category
-    
 
     const totalCount = await Category.countDocuments({
       location: { $regex: sortQuery, $options: "i" },
-      Status: "active",
+      Status: true,
     });
 
     const result = [];
@@ -200,33 +280,37 @@ const getheaderblog = async (req, res) => {
 
 const postBlog = async (req, res) => {
   try {
-    const items = BlogHelper(req);
-    const categ = items.Category;
-    console.log(categ);
-
-    delete items.Category;
-    console.log(items);
-
-    const createdBlogs = [];
-    const totaldoc = await Blog.countDocuments({});
-
-    for (let i = 0; i < categ.length; i++) {
-      const category = categ[i];
-
-      const itemsdata = {
-        ...items,
-        Category: category,
-        order: totaldoc + i + 1, // Use totaldoc + i for the order field
-      };
-
-      const result = await Blog.create(itemsdata);
-      console.log(result);
-      createdBlogs.push(result);
+    const setarray = req.body.Category.replace(/[\[\]"']/g, "").split(",");
+    let Image;
+    if (req.files.Image2) {
+      Image = req.files.Image2[0].path.replace(/\\/g, "/");
+      Image = Image.substring(Image.indexOf("/images"));
     }
 
+    const items = req.body;
+    delete items.Category;
+    console.log(items);
+    let createdBlogs = [];
+    const totaldoc = await Blog.countDocuments({});
+
+    for (let i = 0; i < setarray.length; i++) {
+      console.log(setarray[i]);
+      const itemsdata = {
+        ...items,
+        Image: Image,
+        Category: setarray[i],
+        order: totaldoc + i + 1,
+      };
+      const dataschema = new Blog(itemsdata);
+      createdBlogs.push(dataschema);
+    }
+    console.log(createdBlogs);
+
+    const result = await Blog.insertMany(createdBlogs);
+    console.log(result);
     res
       .status(200)
-      .json({ message: "Blogs created successfully", blogs: createdBlogs });
+      .json({ message: "Blogs created successfully", blogs: result });
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Error creating blogs", error });
@@ -236,8 +320,23 @@ const postBlog = async (req, res) => {
 const EditBlog = async (req, res) => {
   try {
     console.log(req.body);
-    const data = BlogHelper(req);
-    console.log(data);
+    const item = req.body;
+    let Image, ReporterImage;
+    if (req.files.Image1) {
+      ReporterImage = req.files.Image1[0].path.replace(/\\/g, "/");
+      ReporterImage = ReporterImage.substring(ReporterImage.indexOf("/images"));
+    }
+    if (req.files.Image2) {
+      Image = req.files.Image2[0].path.replace(/\\/g, "/");
+      Image = Image.substring(Image.indexOf("/images"));
+    }
+    console.log(Image);
+
+    const data = {
+      ReporterImage: ReporterImage,
+      ...item,
+      Image: Image,
+    };
     const itemId = req.params.id;
     updatedItem = await Blog.findByIdAndUpdate(itemId, data, {
       new: true, // return the modified document rather than the original
@@ -356,4 +455,5 @@ module.exports = {
   MultiDeleteBlog,
   MultiEditBlog,
   getAllBlog,
+  getblogsearch,
 };

@@ -17,8 +17,8 @@ const TeamRouter = require("./routes/Team");
 const AddressRouter = require("./routes/Address");
 const RulesRouter = require("./routes/Rules");
 const FounderRouter = require("./routes/Founder");
-const insertYouTubeData = require("./cornjobs/youtube");
 const YoutubeRouter = require("./routes/youtube");
+const Subscribers = require("./routes/Subscribers");
 
 const PORT = process.env.PORT || 5000;
 const host = process.env.HOST || "localhost";
@@ -50,6 +50,7 @@ app.use("/api", Taglineroute);
 app.use("/api", Toplinksrouter);
 app.use("/api", Loginrouter);
 app.use("/api", YoutubeRouter);
+app.use("/api", Subscribers);
 
 app.use("/image", express.static("upload/images"));
 app.use("/images", express.static("upload/images"));

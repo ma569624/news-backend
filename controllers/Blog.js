@@ -271,7 +271,8 @@ const getheaderblog = async (req, res) => {
 
 const postBlog = async (req, res) => {
   try {
-    const setarray = req.body.Category.replace(/[\[\]"']/g, "").split(",");
+    const setarray = req.body.Category.replace(/[\[\]"']/g, "").split(/,(?!\s)/);
+    console.log(setarray)
     let Image;
     if (req.files.Image2) {
       Image = req.files.Image2[0].path.replace(/\\/g, "/");

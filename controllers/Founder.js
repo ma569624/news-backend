@@ -35,17 +35,20 @@ const EditFounder = async (req, res) => {
   try {
     let EmployeeImage;
   
-    if (req.files.Image1) {
-      EmployeeImage = req.files.Image1[0].path.replace(/\\/g, '/');
+    if (req.files.profile) {
+      EmployeeImage = req.files.profile[0].path.replace(/\\/g, '/');
+      console.log(EmployeeImage)
       EmployeeImage = EmployeeImage.substring(EmployeeImage.indexOf("/images"));
     }
+    console.log(EmployeeImage)
     const items = req.body;
     const itemsdata = {
       ...items,
-      categorylogo: categorylogo,
-      headinglogo: headinglogo,
+      EmployeeImage: EmployeeImage,
     };
     const itemId = req.params.id;
+    console.log(EmployeeImage)
+
     const updatedItem = await Founder.findByIdAndUpdate(itemId, itemsdata, {
       new: true, // return the modified document rather than the original
     });

@@ -33,7 +33,7 @@ const BlogSchema = new mongoose.Schema({
     
     Status: {
         type: Boolean,
-        default: false,
+        default: true,
     },
     Heading: {
         type: String,

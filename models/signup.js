@@ -57,7 +57,7 @@ const SignupSchema = new mongoose.Schema({
     },
     user_block: {
         type: Boolean,
-        require: false
+        default: false,
     },
     Signupdate: {
         type: Date,

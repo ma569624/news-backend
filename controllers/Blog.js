@@ -186,6 +186,8 @@ const getAllBlog = async (req, res) => {
       .limit(limit)
       .skip(skip);
 
+      console.log(categorydata)
+
     const totalCount = await Category.countDocuments({
       location: { $regex: sortQuery, $options: "i" },
       Status: true,
@@ -272,7 +274,6 @@ const getheaderblog = async (req, res) => {
 const postBlog = async (req, res) => {
   try {
     const setarray = req.body.Category.replace(/[\[\]"']/g, "").split(/,(?!\s)/);
-    console.log(setarray)
     let Image;
     if (req.files.Image2) {
       Image = req.files.Image2[0].path.replace(/\\/g, "/");
@@ -306,11 +307,12 @@ const postBlog = async (req, res) => {
 };
 
 const EditBlog = async (req, res) => {
+  //update categories
   try {
     const item = req.body;
     let Image, ReporterImage;
-    if (req.files.Image1) {
-      ReporterImage = req.files.Image1[0].path.replace(/\\/g, "/");
+    if (req.files.profile) {
+      ReporterImage = req.files.profile[0].path.replace(/\\/g, "/");
       ReporterImage = ReporterImage.substring(ReporterImage.indexOf("/images"));
     }
     if (req.files.Image2) {

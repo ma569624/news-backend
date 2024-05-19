@@ -3,9 +3,13 @@ const Team = require("../models/Team");
 const getTeam = async (req, res) => {
   const Id = req.query._id;
   if (Id) {
-    result = await Team.find({ _id: Id }).sort({ CreationDate: -1 });
-  } else {
-    result = await Team.find({}).sort({ CreationDate: -1 });
+    result = await Team.find({ _id: Id }).sort({ CreationDate: 1 });
+  } 
+  if(req.query.Status) {
+    result = await Team.find({Status: req.query.Status}).sort({ CreationDate: 1 });
+  }
+  else {
+    result = await Team.find({}).sort({ CreationDate: 1 });
   }
   res.status(200).json(result);
 };

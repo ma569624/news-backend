@@ -174,10 +174,7 @@ const getAllBlog = async (req, res) => {
     const limit = 1;
 
     let skip = (page - 1) * limit;
-    // const catpage = 1
-    // const catskip = (catpage - 1) * limit;
-
-    // Category
+    
     const categorydata = await Category.find({
       location: { $regex: sortQuery, $options: "i" },
       Status: true,
@@ -255,12 +252,18 @@ const getheaderblog = async (req, res) => {
     for (const item of categorydata) {
       const data = await Blog.find({
         Category: { $regex: item.category, $options: "i" },
+        Status: true,
       })
         .sort({ order: -1 })
         .limit(5);
+        const totalnews = await Blog.countDocuments({
+          Category: { $regex: item.category, $options: "i" },
+
+        });
       const resultItem = {
         section: item,
         data: data,
+        totalnews: totalnews
       };
       result.push(resultItem);
     }
@@ -283,8 +286,9 @@ const postBlog = async (req, res) => {
     const items = req.body;
     delete items.Category;
     let createdBlogs = [];
-    const totaldoc = await Blog.countDocuments({});
-
+    let totaldoc = await Blog.findOne({}, { order: 1 }).sort({ order: -1 });
+    totaldoc = totaldoc.order;
+    console.log(totaldoc)
     for (let i = 0; i < setarray.length; i++) {
       const itemsdata = {
         ...items,
@@ -295,11 +299,14 @@ const postBlog = async (req, res) => {
       const dataschema = new Blog(itemsdata);
       createdBlogs.push(dataschema);
     }
-
+    console.log(createdBlogs)
     const result = await Blog.insertMany(createdBlogs);
     res
       .status(200)
       .json({ message: "Blogs created successfully", blogs: result });
+    // res
+    //   .status(200)
+    //   .json({ message: "Blogs created successfully" });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Error creating blogs", error });
@@ -348,18 +355,18 @@ const DeleteBlog = async (req, res) => {
       return res.status(404).json({ error: "Product not found" });
     }
 
-    const insertflied = await Blog.find({});
+    // const insertflied = await Blog.find({});
 
-    for (let index = 0; index < insertflied.length; index++) {
-      // const element = array[index];
-      const data = await Blog.findByIdAndUpdate(
-        insertflied[index]._id,
-        { order: index },
-        {
-          new: true, // return the modified document rather than the original
-        }
-      );
-    }
+    // for (let index = 0; index < insertflied.length; index++) {
+    //   // const element = array[index];
+    //   const data = await Blog.findByIdAndUpdate(
+    //     insertflied[index]._id,
+    //     { order: index },
+    //     {
+    //       new: true, // return the modified document rather than the original
+    //     }
+    //   );
+    // }
 
     // Respond with a success message
     res.json({ message: "Product deleted successfully" });

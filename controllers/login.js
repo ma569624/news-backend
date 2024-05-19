@@ -4,7 +4,7 @@ const SignupSchema = require("../models/signup");
 const getloginlogs = async (req, res) => {
   try {
     const mydata = await loginSchema.find(req.query).limit(25);
-    mydata.reverse()
+    mydata.reverse();
     return res.status(200).json(mydata);
   } catch (error) {
     return res.status(500).json({ message: "Error occurred", error });
@@ -42,7 +42,8 @@ const postlogin = async (req, res) => {
       }
 
       const ip = req.socket.remoteAddress;
-
+      
+      console.log(req);
       const items = {
         ...req.body,
         ipaddres: ip,

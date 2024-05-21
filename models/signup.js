@@ -21,11 +21,10 @@ const SignupSchema = new mongoose.Schema({
         type: String,
         require: false
     },
-    email: {
-        type: String,   
-        unique: false,
-        require: false
-    },
+    // email: {
+    //     type: String,  
+    //     require: false,
+    // },
     number: {
         type: String,
         require: false

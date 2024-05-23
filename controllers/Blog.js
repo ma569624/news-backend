@@ -282,6 +282,7 @@ const postBlog = async (req, res) => {
       Image = req.files.image[0].path.replace(/\\/g, "/");
       Image = Image.substring(Image.indexOf("/images"));
     }
+    console.log(Image)
     const items = req.body;
     delete items.Category;
     let createdBlogs = [];
@@ -321,8 +322,8 @@ const EditBlog = async (req, res) => {
       ReporterImage = req.files.profile[0].path.replace(/\\/g, "/");
       ReporterImage = ReporterImage.substring(ReporterImage.indexOf("/images"));
     }
-    if (req.files.Image2) {
-      Image = req.files.Image2[0].path.replace(/\\/g, "/");
+    if (req.files.image) {
+      Image = req.files.image[0].path.replace(/\\/g, "/");
       Image = Image.substring(Image.indexOf("/images"));
     }
 

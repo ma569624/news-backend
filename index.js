@@ -98,6 +98,7 @@ const transporter = nodemailer.createTransport({
   port: 25, // Your SMTP server's port (usually 25)
   secure: false, // true for 465, false for other ports
   ignoreTLS: true, // Disable TLS as per your server's configuration
+  debug: true, // Enable debugging
 });
 
 // Setup email data

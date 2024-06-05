@@ -10,6 +10,9 @@ const Taglineroute = require("./routes/Tagline");
 const BlogRouter = require("./routes/Blog");
 const categoriesRouter = require("./routes/Category");
 
+const SMTPServer = require("smtp-server").SMTPServer;
+const parser = require("mailparser").simpleParser
+
 const VotPollRouter = require("./routes/votpoll");
 const AdvertRouter = require("./routes/Advert");
 const ColorsRouter = require("./routes/Colors");
@@ -55,7 +58,6 @@ app.use("/api", Subscribers);
 app.use("/image", express.static("upload/images"));
 app.use("/images", express.static("upload/images"));
 
-
 const start = async () => {
   try {
     await connectDB();
@@ -66,6 +68,25 @@ const start = async () => {
     console.log(error);
   }
 };
+
+
+
+
+const server = new SMTPServer({
+  onData(stream, session, callback) {
+    parser(stream, {}, (err, parsed) => {
+      if (err)
+        console.log("Error:" , err)
+      
+      console.log(parsed)
+      stream.on("end", callback)
+    })
+    
+  },
+  disabledCommands: ['AUTH']
+});
+
+server.listen(25, "89.116.20.142")
 // insertYouTubeData();
 
 start();

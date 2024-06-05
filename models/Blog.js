@@ -68,6 +68,8 @@ const BlogSchema = new mongoose.Schema({
         type: Date,
         default: new Date()
     }
+}, {
+    timestamps: true
 })
 
 

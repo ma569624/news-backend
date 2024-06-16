@@ -4,9 +4,8 @@ const mongoose = require("mongoose")
 const AdvertSchema = new mongoose.Schema({
 
     Status: {
-        type: String,
-        enum: ['active', 'inactive', 'pending'], // Define allowed values
-        default: 'active',
+        type: Boolean,
+        default: true,
     },
     location: {
         type: [String],

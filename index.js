@@ -69,53 +69,53 @@ const start = async () => {
   }
 };
 
-const server = new SMTPServer({
-  onData(stream, session, callback) {
-    parser(stream, {}, (err, parsed) => {
-      if (err) console.log("Error:", err);
+// const server = new SMTPServer({
+//   onData(stream, session, callback) {
+//     parser(stream, {}, (err, parsed) => {
+//       if (err) console.log("Error:", err);
 
-      console.log(parsed);
-      stream.on("end", callback);
-    });
-  },
-  disabledCommands: ["AUTH"],
-  disableReverseLookup: true,
-  logger: false,
-  secure: false,
-  hideSTARTTLS: true,
-  hide8BITMIME: true,
-  hidePIPELINING: true,
-  hideSMTPUTF8: true,
-});
+//       console.log(parsed);
+//       stream.on("end", callback);
+//     });
+//   },
+//   disabledCommands: ["AUTH"],
+//   disableReverseLookup: true,
+//   logger: false,
+//   secure: false,
+//   hideSTARTTLS: true,
+//   hide8BITMIME: true,
+//   hidePIPELINING: true,
+//   hideSMTPUTF8: true,
+// });
 
 // server.listen(25)
-server.listen(25, "89.116.20.142");
+// server.listen(25, "89.116.20.142");
 // insertYouTubeData();
 
-// Create a transporter object using SMTP
-const transporter = nodemailer.createTransport({
-  host: "thirdeyeworldnews.com",
-  port: 25, // Your SMTP server's port (usually 25)
-  secure: false, // true for 465, false for other ports
-  ignoreTLS: true, // Disable TLS as per your server's configuration
-  debug: true, // Enable debugging
-});
+// // Create a transporter object using SMTP
+// const transporter = nodemailer.createTransport({
+//   host: "thirdeyeworldnews.com",
+//   port: 25, // Your SMTP server's port (usually 25)
+//   secure: false, // true for 465, false for other ports
+//   ignoreTLS: true, // Disable TLS as per your server's configuration
+//   debug: true, // Enable debugging
+// });
 
-// Setup email data
-const mailOptions = {
-  from: "info@thirdeyeworldnews.com", // sender address
-  to: "ms569624@gmail.com", // list of receivers
-  subject: "test", // Subject line
-  text: "Hello world!", // plain text body
-  html: "<b>Hello world!</b>", // html body
-};
+// // Setup email data
+// const mailOptions = {
+//   from: "info@thirdeyeworldnews.com", // sender address
+//   to: "ms569624@gmail.com", // list of receivers
+//   subject: "test", // Subject line
+//   text: "Hello world!", // plain text body
+//   html: "<b>Hello world!</b>", // html body
+// };
 
-// Send mail with defined transport object
-transporter.sendMail(mailOptions, (error, info) => {
-  if (error) {
-    return console.log(error);
-  }
-  console.log("Message sent: %s", info.messageId);
-});
+// // Send mail with defined transport object
+// transporter.sendMail(mailOptions, (error, info) => {
+//   if (error) {
+//     return console.log(error);
+//   }
+//   console.log("Message sent: %s", info.messageId);
+// });
 
 start();
